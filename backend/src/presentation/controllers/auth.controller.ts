@@ -1,4 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterUserUseCase } from '../../application/use-cases/auth/register-user.use-case.js';
 import { LoginUserUseCase } from '../../application/use-cases/auth/login-user.use-case.js';
@@ -21,6 +22,7 @@ function toAuthResponse(user: User, accessToken: string): AuthResponseDto {
   };
 }
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(

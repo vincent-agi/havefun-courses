@@ -1,10 +1,13 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard.js';
 import { CurrentUser } from '../../infrastructure/auth/current-user.decorator.js';
 import { type JwtPayload } from '../../infrastructure/auth/jwt-payload.js';
 import { ListMySubmissionsUseCase } from '../../application/use-cases/challenges/list-my-submissions.use-case.js';
 import { SubmissionResponseDto } from '../../application/dtos/submission-response.dto.js';
 
+@ApiTags('submissions')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('submissions')
 export class SubmissionsController {

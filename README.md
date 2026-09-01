@@ -22,7 +22,7 @@ Le projet s'inscrit dans le cadre de l'**ODD 4 de l'ONU — Éducation de Qualit
 | Stockage médias | S3-compatible (MinIO en local) |
 | Architecture | Clean Architecture (domaine / cas d'usage / infrastructure / présentation), principes SOLID |
 
-Le détail des choix et leurs justifications sont documentés dans [`docs/architecture.md`](docs/architecture.md). La charte graphique et les composants sont documentés dans [`docs/design-system.md`](docs/design-system.md).
+Le détail des choix et leurs justifications sont documentés dans [`docs/architecture.md`](docs/architecture.md). La charte graphique et les composants sont documentés dans [`docs/design-system.md`](docs/design-system.md). Le guide de mise en production est dans [`docs/deployment.md`](docs/deployment.md), l'audit RGPD/accessibilité dans [`docs/rgpd-accessibilite.md`](docs/rgpd-accessibilite.md). La documentation API interactive (Swagger) est servie sur `/docs` par l'API en cours d'exécution.
 
 ## Structure du dépôt
 
