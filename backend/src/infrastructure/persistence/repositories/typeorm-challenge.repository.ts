@@ -17,6 +17,9 @@ function toDomain(entity: ChallengeOrmEntity): Challenge {
     durationMinutes: entity.durationMinutes,
     passionId: entity.passion.id,
     skillId: entity.skill.id,
+    narrativeIntro: entity.narrativeIntro,
+    theoryExplanation: entity.theoryExplanation,
+    calculatorSchema: entity.calculatorSchema,
     createdAt: entity.createdAt,
   };
 }

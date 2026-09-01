@@ -1,6 +1,10 @@
 import { httpClient } from './http-client';
 import { ChallengeRepository } from '../../domain/repositories/challenge.repository';
-import { Challenge, ChallengeFilters } from '../../domain/entities/challenge';
+import {
+  Challenge,
+  ChallengeDetail,
+  ChallengeFilters,
+} from '../../domain/entities/challenge';
 
 function toQueryString(filters: ChallengeFilters): string {
   const params = new URLSearchParams();
@@ -15,5 +19,9 @@ function toQueryString(filters: ChallengeFilters): string {
 export class HttpChallengeRepository implements ChallengeRepository {
   async list(filters: ChallengeFilters): Promise<Challenge[]> {
     return httpClient.get<Challenge[]>(`/challenges${toQueryString(filters)}`);
+  }
+
+  async getDetail(id: string): Promise<ChallengeDetail> {
+    return httpClient.get<ChallengeDetail>(`/challenges/${id}`);
   }
 }
