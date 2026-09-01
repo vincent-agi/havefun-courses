@@ -7,12 +7,13 @@ export interface User {
   firstName: string;
   schoolLevel: SchoolLevel | null;
   passionIds: string[];
+  xpPoints: number;
   createdAt: Date;
 }
 
 export type NewUser = Omit<
   User,
-  'id' | 'createdAt' | 'passionIds' | 'schoolLevel'
+  'id' | 'createdAt' | 'passionIds' | 'schoolLevel' | 'xpPoints'
 > & {
   passionIds?: string[];
   schoolLevel?: SchoolLevel | null;

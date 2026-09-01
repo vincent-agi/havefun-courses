@@ -39,6 +39,9 @@ export class UserOrmEntity {
   })
   passions!: PassionOrmEntity[];
 
+  @Column({ type: 'int', name: 'xp_points', default: 0 })
+  xpPoints!: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 }

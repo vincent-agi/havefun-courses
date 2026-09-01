@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -51,7 +52,15 @@ export function CatalogueScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Quêtes disponibles</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Quêtes disponibles</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => navigation.navigate('Profile')}
+        >
+          <Text style={styles.profileLink}>Profil</Text>
+        </Pressable>
+      </View>
 
       <ScrollView
         horizontal
@@ -129,11 +138,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     gap: spacing.sm,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: spacing.xs,
+  },
   title: {
     color: colors.text.primary,
     fontSize: typography.fontSize.xl,
     fontWeight: '700',
-    marginBottom: spacing.xs,
+  },
+  profileLink: {
+    color: colors.accent.primary,
+    fontSize: typography.fontSize.md,
+    fontWeight: '600',
   },
   filterRow: {
     flexDirection: 'row',

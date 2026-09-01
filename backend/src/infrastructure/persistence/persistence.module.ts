@@ -6,11 +6,13 @@ import { PASSION_REPOSITORY } from '../../domain/repositories/passion.repository
 import { CHALLENGE_REPOSITORY } from '../../domain/repositories/challenge.repository.js';
 import { SKILL_REPOSITORY } from '../../domain/repositories/skill.repository.js';
 import { SUBMISSION_REPOSITORY } from '../../domain/repositories/submission.repository.js';
+import { BADGE_REPOSITORY } from '../../domain/repositories/badge.repository.js';
 import { TypeOrmUserRepository } from './repositories/typeorm-user.repository.js';
 import { TypeOrmPassionRepository } from './repositories/typeorm-passion.repository.js';
 import { TypeOrmChallengeRepository } from './repositories/typeorm-challenge.repository.js';
 import { TypeOrmSkillRepository } from './repositories/typeorm-skill.repository.js';
 import { TypeOrmSubmissionRepository } from './repositories/typeorm-submission.repository.js';
+import { TypeOrmBadgeRepository } from './repositories/typeorm-badge.repository.js';
 
 @Module({
   imports: [TypeOrmModule.forFeature(ormEntities)],
@@ -20,6 +22,7 @@ import { TypeOrmSubmissionRepository } from './repositories/typeorm-submission.r
     { provide: CHALLENGE_REPOSITORY, useClass: TypeOrmChallengeRepository },
     { provide: SKILL_REPOSITORY, useClass: TypeOrmSkillRepository },
     { provide: SUBMISSION_REPOSITORY, useClass: TypeOrmSubmissionRepository },
+    { provide: BADGE_REPOSITORY, useClass: TypeOrmBadgeRepository },
   ],
   exports: [
     USER_REPOSITORY,
@@ -27,6 +30,7 @@ import { TypeOrmSubmissionRepository } from './repositories/typeorm-submission.r
     CHALLENGE_REPOSITORY,
     SKILL_REPOSITORY,
     SUBMISSION_REPOSITORY,
+    BADGE_REPOSITORY,
   ],
 })
 export class PersistenceModule {}

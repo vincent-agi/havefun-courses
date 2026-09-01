@@ -12,6 +12,7 @@ export interface Challenge {
   narrativeIntro: string;
   theoryExplanation: string;
   calculatorSchema: CalculatorSchema;
+  xpReward: number;
   createdAt: Date;
 }
 

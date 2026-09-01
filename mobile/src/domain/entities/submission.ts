@@ -1,3 +1,5 @@
+import { Badge } from './badge';
+
 export enum SubmissionStatus {
   PENDING = 'pending',
   VALIDATED = 'validated',
@@ -12,6 +14,9 @@ export interface Submission {
   measurements: Record<string, number> | null;
   result: number | null;
   submittedAt: string;
+  xpAwarded?: number;
+  totalXp?: number;
+  badgesAwarded?: Badge[];
 }
 
 export interface CreateSubmissionInput {

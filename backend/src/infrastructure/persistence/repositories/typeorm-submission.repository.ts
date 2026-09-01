@@ -5,6 +5,7 @@ import { type SubmissionRepository } from '../../../domain/repositories/submissi
 import {
   NewSubmission,
   Submission,
+  SubmissionStatus,
 } from '../../../domain/entities/submission.js';
 import { SubmissionOrmEntity } from '../orm-entities/submission.orm-entity.js';
 import { UserOrmEntity } from '../orm-entities/user.orm-entity.js';
@@ -57,6 +58,14 @@ export class TypeOrmSubmissionRepository implements SubmissionRepository {
     return toDomain(saved);
   }
 
+  async findById(id: string): Promise<Submission | null> {
+    const entity = await this.repository.findOne({
+      where: { id },
+      relations: { user: true, challenge: true },
+    });
+    return entity ? toDomain(entity) : null;
+  }
+
   async findByUser(userId: string): Promise<Submission[]> {
     const entities = await this.repository.find({
       where: { user: { id: userId } },
@@ -64,5 +73,51 @@ export class TypeOrmSubmissionRepository implements SubmissionRepository {
       order: { submittedAt: 'DESC' },
     });
     return entities.map(toDomain);
+  }
+
+  async updateStatus(
+    id: string,
+    status: SubmissionStatus,
+  ): Promise<Submission> {
+    await this.repository.update(
+      { id },
+      {
+        status,
+        validatedAt: status === SubmissionStatus.VALIDATED ? new Date() : null,
+      },
+    );
+    const entity = await this.repository.findOneOrFail({
+      where: { id },
+      relations: { user: true, challenge: true },
+    });
+    return toDomain(entity);
+  }
+
+  async countByUserAndSkill(
+    userId: string,
+    skillId: string,
+    status: SubmissionStatus,
+  ): Promise<number> {
+    return this.repository.count({
+      where: {
+        user: { id: userId },
+        challenge: { skill: { id: skillId } },
+        status,
+      },
+    });
+  }
+
+  async countByUserAndPassion(
+    userId: string,
+    passionId: string,
+    status: SubmissionStatus,
+  ): Promise<number> {
+    return this.repository.count({
+      where: {
+        user: { id: userId },
+        challenge: { passion: { id: passionId } },
+        status,
+      },
+    });
   }
 }

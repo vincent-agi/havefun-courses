@@ -7,6 +7,7 @@ export interface UserProfileDto {
   firstName: string;
   schoolLevel: SchoolLevel | null;
   passionIds: string[];
+  xpPoints: number;
 }
 
 export function toUserProfileDto(user: User): UserProfileDto {
@@ -16,5 +17,6 @@ export function toUserProfileDto(user: User): UserProfileDto {
     firstName: user.firstName,
     schoolLevel: user.schoolLevel,
     passionIds: user.passionIds,
+    xpPoints: user.xpPoints,
   };
 }

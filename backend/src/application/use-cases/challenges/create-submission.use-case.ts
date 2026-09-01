@@ -7,8 +7,10 @@ import {
   type SubmissionRepository,
   SUBMISSION_REPOSITORY,
 } from '../../../domain/repositories/submission.repository.js';
+import { SubmissionStatus } from '../../../domain/entities/submission.js';
 import { CreateSubmissionDto } from '../../dtos/create-submission.dto.js';
 import { SubmissionResponseDto } from '../../dtos/submission-response.dto.js';
+import { ValidateSubmissionUseCase } from './validate-submission.use-case.js';
 
 @Injectable()
 export class CreateSubmissionUseCase {
@@ -17,6 +19,7 @@ export class CreateSubmissionUseCase {
     private readonly challengeRepository: ChallengeRepository,
     @Inject(SUBMISSION_REPOSITORY)
     private readonly submissionRepository: SubmissionRepository,
+    private readonly validateSubmissionUseCase: ValidateSubmissionUseCase,
   ) {}
 
   async execute(
@@ -38,14 +41,25 @@ export class CreateSubmissionUseCase {
       sensorData: dto.sensorData ?? null,
     });
 
+    // MVP : aucune revue humaine n'existe encore, la soumission est auto-validée
+    // pour déclencher immédiatement XP et badges. À remplacer par un flux de
+    // validation dédié quand un rôle de relecture sera introduit.
+    const validation = await this.validateSubmissionUseCase.execute(
+      submission,
+      challenge,
+    );
+
     return {
       id: submission.id,
       challengeId: submission.challengeId,
-      status: submission.status,
+      status: SubmissionStatus.VALIDATED,
       mediaUrl: submission.mediaUrl,
       measurements: submission.measurements,
       result: submission.result,
       submittedAt: submission.submittedAt,
+      xpAwarded: validation.xpAwarded,
+      totalXp: validation.totalXp,
+      badgesAwarded: validation.badgesAwarded,
     };
   }
 }
