@@ -20,6 +20,7 @@ function toDomain(entity: ChallengeOrmEntity): Challenge {
     narrativeIntro: entity.narrativeIntro,
     theoryExplanation: entity.theoryExplanation,
     calculatorSchema: entity.calculatorSchema,
+    xpReward: entity.xpReward,
     createdAt: entity.createdAt,
   };
 }

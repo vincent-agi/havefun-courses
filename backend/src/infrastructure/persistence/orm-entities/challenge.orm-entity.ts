@@ -45,6 +45,9 @@ export class ChallengeOrmEntity {
   @Column({ type: 'json', name: 'calculator_schema' })
   calculatorSchema!: CalculatorSchema;
 
+  @Column({ type: 'int', name: 'xp_reward', default: 100 })
+  xpReward!: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 }

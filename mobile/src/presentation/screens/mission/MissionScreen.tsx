@@ -11,9 +11,12 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { container } from '../../../application/container';
 import { getCalculator } from '../../../application/calculators';
 import { ChallengeDetail } from '../../../domain/entities/challenge';
+import { Submission } from '../../../domain/entities/submission';
 import { Button } from '../../components/Button';
 import { StepIndicator } from '../../components/StepIndicator';
 import { PhotoUploadField } from '../../components/PhotoUploadField';
+import { XPBar } from '../../components/XPBar';
+import { BadgeIcon } from '../../components/BadgeIcon';
 import { colors, spacing, typography } from '../../theme/tokens';
 import type { MainStackParamList } from '../../navigation/MainNavigator';
 
@@ -30,7 +33,9 @@ export function MissionScreen({ route, navigation }: Props) {
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [submissionResult, setSubmissionResult] = useState<Submission | null>(
+    null,
+  );
 
   useEffect(() => {
     container.getChallengeDetailUseCase
@@ -66,25 +71,44 @@ export function MissionScreen({ route, navigation }: Props) {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      await container.submitProofUseCase.execute({
+      const submission = await container.submitProofUseCase.execute({
         challengeId,
         measurements: allFieldsValid ? numericMeasurements : undefined,
         result: result ?? undefined,
         photoUri: photoUri ?? undefined,
       });
-      setSubmitted(true);
+      setSubmissionResult(submission);
     } finally {
       setSubmitting(false);
     }
   };
 
-  if (submitted) {
+  if (submissionResult) {
+    const totalXp = submissionResult.totalXp ?? 0;
+    const xpBarMax = Math.max(500, Math.ceil(totalXp / 500) * 500);
+
     return (
       <View style={styles.center}>
         <Text style={styles.confirmationTitle}>Preuve envoyée !</Text>
-        <Text style={styles.confirmationBody}>
-          Ta soumission est en attente de validation.
-        </Text>
+
+        {submissionResult.xpAwarded !== undefined && (
+          <Text style={styles.xpGained}>+ {submissionResult.xpAwarded} XP</Text>
+        )}
+        <XPBar
+          current={totalXp}
+          max={xpBarMax}
+          label={`${totalXp} XP au total`}
+        />
+
+        {submissionResult.badgesAwarded &&
+          submissionResult.badgesAwarded.length > 0 && (
+            <View style={styles.badgeRow}>
+              {submissionResult.badgesAwarded.map(badge => (
+                <BadgeIcon key={badge.id} label={badge.label} earned />
+              ))}
+            </View>
+          )}
+
         <Button
           label="Retour au catalogue"
           onPress={() => navigation.navigate('Catalogue')}
@@ -181,6 +205,7 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.background.primary,
@@ -230,9 +255,15 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.xl,
     fontWeight: '700',
   },
-  confirmationBody: {
-    color: colors.text.secondary,
-    fontSize: typography.fontSize.md,
-    textAlign: 'center',
+  xpGained: {
+    color: colors.accent.secondary,
+    fontSize: typography.fontSize.lg,
+    fontWeight: '700',
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: spacing.md,
   },
 });

@@ -63,6 +63,7 @@ async function seed() {
         "Mesure la hauteur d'un obstacle de ton skatepark en appliquant le théorème de Thalès, comme les bâtisseurs égyptiens.",
       schoolLevel: SchoolLevel.TROISIEME,
       durationMinutes: 45,
+      xpReward: 150,
       passion: skate,
       skill: thales,
       narrativeIntro:
@@ -106,6 +107,7 @@ async function seed() {
         'Analyse la fréquence des cordes de ta guitare pour comprendre la propagation des ondes sonores.',
       schoolLevel: SchoolLevel.SECONDE,
       durationMinutes: 30,
+      xpReward: 100,
       passion: musique,
       skill: ondes,
       narrativeIntro:

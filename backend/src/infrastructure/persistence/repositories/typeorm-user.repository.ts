@@ -15,6 +15,7 @@ function toDomain(entity: UserOrmEntity): User {
     firstName: entity.firstName,
     schoolLevel: entity.schoolLevel,
     passionIds: (entity.passions ?? []).map((p) => p.id),
+    xpPoints: entity.xpPoints,
     createdAt: entity.createdAt,
   };
 }
@@ -66,5 +67,14 @@ export class TypeOrmUserRepository implements UserRepository {
     });
     const saved = await this.repository.save(entity);
     return toDomain(saved);
+  }
+
+  async addXp(id: string, amount: number): Promise<User> {
+    await this.repository.increment({ id }, 'xpPoints', amount);
+    const entity = await this.repository.findOneOrFail({
+      where: { id },
+      relations: { passions: true },
+    });
+    return toDomain(entity);
   }
 }

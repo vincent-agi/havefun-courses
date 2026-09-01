@@ -11,4 +11,5 @@ export interface UserRepository {
     id: string,
     data: { schoolLevel: SchoolLevel; passionIds: string[] },
   ): Promise<User>;
+  addXp(id: string, amount: number): Promise<User>;
 }

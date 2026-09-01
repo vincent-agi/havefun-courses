@@ -6,6 +6,7 @@ export interface User {
   firstName: string;
   schoolLevel: SchoolLevel | null;
   passionIds: string[];
+  xpPoints: number;
 }
 
 export function isOnboardingComplete(user: User): boolean {
