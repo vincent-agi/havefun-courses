@@ -1,4 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard.js';
 import { CurrentUser } from '../../infrastructure/auth/current-user.decorator.js';
 import { type JwtPayload } from '../../infrastructure/auth/jwt-payload.js';
@@ -8,6 +9,8 @@ import {
   UploadUrlResponseDto,
 } from '../../application/dtos/upload-url-request.dto.js';
 
+@ApiTags('media')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('media')
 export class MediaController {

@@ -8,6 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard.js';
 import { CurrentUser } from '../../infrastructure/auth/current-user.decorator.js';
 import { type JwtPayload } from '../../infrastructure/auth/jwt-payload.js';
@@ -24,6 +25,8 @@ import {
 import { BadgeStatusDto } from '../../application/dtos/badge-status.dto.js';
 import { PassCompetencesDto } from '../../application/dtos/pass-competences.dto.js';
 
+@ApiTags('users')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('users/me')
 export class UsersController {

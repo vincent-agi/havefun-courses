@@ -7,6 +7,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../infrastructure/auth/jwt-auth.guard.js';
 import { CurrentUser } from '../../infrastructure/auth/current-user.decorator.js';
 import { type JwtPayload } from '../../infrastructure/auth/jwt-payload.js';
@@ -19,6 +20,8 @@ import { ChallengeDetailDto } from '../../application/dtos/challenge-detail.dto.
 import { CreateSubmissionDto } from '../../application/dtos/create-submission.dto.js';
 import { SubmissionResponseDto } from '../../application/dtos/submission-response.dto.js';
 
+@ApiTags('challenges')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('challenges')
 export class ChallengesController {
