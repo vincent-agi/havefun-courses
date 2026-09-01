@@ -49,6 +49,7 @@ cd backend
 npm install
 cp .env.example .env   # renseigner les accès MariaDB et le secret JWT
 npm run migration:run
+npm run seed            # optionnel : jeu de données de démonstration
 npm run start:dev
 ```
 
