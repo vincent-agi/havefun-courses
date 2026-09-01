@@ -1,4 +1,5 @@
 import { SchoolLevel } from './school-level.js';
+import { CalculatorSchema } from './calculator-schema.js';
 
 export interface Challenge {
   id: string;
@@ -8,6 +9,9 @@ export interface Challenge {
   durationMinutes: number;
   passionId: string;
   skillId: string;
+  narrativeIntro: string;
+  theoryExplanation: string;
+  calculatorSchema: CalculatorSchema;
   createdAt: Date;
 }
 

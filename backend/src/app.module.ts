@@ -8,6 +8,7 @@ import { AuthModule } from './presentation/modules/auth/auth.module.js';
 import { UsersModule } from './presentation/modules/users/users.module.js';
 import { PassionsModule } from './presentation/modules/passions/passions.module.js';
 import { ChallengesModule } from './presentation/modules/challenges/challenges.module.js';
+import { MediaModule } from './presentation/modules/media/media.module.js';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ChallengesModule } from './presentation/modules/challenges/challenges.m
     UsersModule,
     PassionsModule,
     ChallengesModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

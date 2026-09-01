@@ -1,5 +1,6 @@
 import { SchoolLevel } from './school-level';
 import { Passion } from './passion';
+import { CalculatorSchema } from './calculator-schema';
 
 export interface Skill {
   id: string;
@@ -16,6 +17,12 @@ export interface Challenge {
   durationMinutes: number;
   passion: Passion;
   skill: Skill;
+}
+
+export interface ChallengeDetail extends Challenge {
+  narrativeIntro: string;
+  theoryExplanation: string;
+  calculatorSchema: CalculatorSchema;
 }
 
 export interface ChallengeFilters {

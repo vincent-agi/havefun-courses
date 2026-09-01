@@ -7,6 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { container } from '../../../application/container';
 import {
   Challenge,
@@ -19,6 +20,9 @@ import {
 import { PassionTag } from '../../components/PassionTag';
 import { QuestCard } from '../../components/QuestCard';
 import { colors, spacing, typography } from '../../theme/tokens';
+import type { MainStackParamList } from '../../navigation/MainNavigator';
+
+type Props = NativeStackScreenProps<MainStackParamList, 'Catalogue'>;
 
 const SCHOOL_LEVELS = Object.values(SchoolLevel);
 const DURATION_OPTIONS: { label: string; maxDurationMinutes?: number }[] = [
@@ -28,7 +32,7 @@ const DURATION_OPTIONS: { label: string; maxDurationMinutes?: number }[] = [
   { label: '≤ 60 min', maxDurationMinutes: 60 },
 ];
 
-export function CatalogueScreen() {
+export function CatalogueScreen({ navigation }: Props) {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
   const [schoolLevel, setSchoolLevel] = useState<SchoolLevel | undefined>();
@@ -104,7 +108,12 @@ export function CatalogueScreen() {
           keyExtractor={item => item.id}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => (
-            <QuestCard challenge={item} onPress={() => {}} />
+            <QuestCard
+              challenge={item}
+              onPress={() =>
+                navigation.navigate('Mission', { challengeId: item.id })
+              }
+            />
           )}
         />
       )}

@@ -1,10 +1,12 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CatalogueScreen } from '../screens/catalogue/CatalogueScreen';
+import { MissionScreen } from '../screens/mission/MissionScreen';
 import { colors } from '../theme/tokens';
 
 export type MainStackParamList = {
   Catalogue: undefined;
+  Mission: { challengeId: string };
 };
 
 const Stack = createNativeStackNavigator<MainStackParamList>();
@@ -18,6 +20,7 @@ export function MainNavigator() {
       }}
     >
       <Stack.Screen name="Catalogue" component={CatalogueScreen} />
+      <Stack.Screen name="Mission" component={MissionScreen} />
     </Stack.Navigator>
   );
 }

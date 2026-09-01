@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SchoolLevel } from '../../../domain/entities/school-level.js';
+import { type CalculatorSchema } from '../../../domain/entities/calculator-schema.js';
 import { PassionOrmEntity } from './passion.orm-entity.js';
 import { SkillOrmEntity } from './skill.orm-entity.js';
 
@@ -34,6 +35,15 @@ export class ChallengeOrmEntity {
   @ManyToOne(() => SkillOrmEntity, { eager: true })
   @JoinColumn({ name: 'skill_id' })
   skill!: SkillOrmEntity;
+
+  @Column({ type: 'text', name: 'narrative_intro' })
+  narrativeIntro!: string;
+
+  @Column({ type: 'text', name: 'theory_explanation' })
+  theoryExplanation!: string;
+
+  @Column({ type: 'json', name: 'calculator_schema' })
+  calculatorSchema!: CalculatorSchema;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

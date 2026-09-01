@@ -33,6 +33,15 @@ export class SubmissionOrmEntity {
   @Column({ type: 'varchar', length: 500, name: 'media_url', nullable: true })
   mediaUrl!: string | null;
 
+  @Column({ type: 'json', nullable: true })
+  measurements!: Record<string, number> | null;
+
+  @Column({ type: 'float', nullable: true })
+  result!: number | null;
+
+  @Column({ type: 'json', name: 'sensor_data', nullable: true })
+  sensorData!: Record<string, unknown> | null;
+
   @CreateDateColumn({ name: 'submitted_at' })
   submittedAt!: Date;
 
