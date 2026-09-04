@@ -1,12 +1,18 @@
+import * as bcrypt from 'bcryptjs';
 import { AppDataSource } from '../data-source.js';
 import {
   PassionOrmEntity,
   SkillOrmEntity,
   ChallengeOrmEntity,
   BadgeOrmEntity,
+  UserOrmEntity,
 } from '../orm-entities/index.js';
 import { SchoolLevel } from '../../../domain/entities/school-level.js';
 import { THALES_SHADOW_RATIO_FORMULA } from '../../../domain/entities/calculator-schema.js';
+import {
+  DEMO_USER_ID,
+  DEMO_USER_EMAIL,
+} from '../../auth/demo-user.constant.js';
 
 const passions = [
   { key: 'mecanique', label: 'Mécanique', icon: '🔧' },
@@ -42,6 +48,7 @@ async function seed() {
   const skillRepo = AppDataSource.getRepository(SkillOrmEntity);
   const badgeRepo = AppDataSource.getRepository(BadgeOrmEntity);
   const challengeRepo = AppDataSource.getRepository(ChallengeOrmEntity);
+  const userRepo = AppDataSource.getRepository(UserOrmEntity);
 
   const savedPassions = await Promise.all(
     passions.map((p) => passionRepo.save(passionRepo.create(p))),
@@ -136,6 +143,25 @@ async function seed() {
       },
     }),
   );
+
+  const demoExists = await userRepo.findOne({ where: { id: DEMO_USER_ID } });
+  if (!demoExists) {
+    const demoPasswordHash = await bcrypt.hash(
+      'demo-no-login-account',
+      10,
+    );
+    await userRepo.save(
+      userRepo.create({
+        id: DEMO_USER_ID,
+        email: DEMO_USER_EMAIL,
+        passwordHash: demoPasswordHash,
+        firstName: 'Invité',
+        schoolLevel: SchoolLevel.TROISIEME,
+        passions: [skate],
+        xpPoints: 0,
+      }),
+    );
+  }
 
   await AppDataSource.destroy();
   console.log('Seed terminé.');
