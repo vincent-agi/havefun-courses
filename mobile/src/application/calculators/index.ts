@@ -13,6 +13,10 @@ import {
   EUCLIDEAN_REMAINDER_FORMULA,
   computeEuclideanRemainder,
 } from './euclidean-division';
+import {
+  AXIAL_SYMMETRY_ERROR_FORMULA,
+  computeAxialSymmetryError,
+} from './axial-symmetry-error';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -22,6 +26,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [RECTANGLE_DIAGONAL_FORMULA]: computeRectangleDiagonal,
   [FOURTH_PROPORTIONAL_FORMULA]: computeFourthProportional,
   [EUCLIDEAN_REMAINDER_FORMULA]: computeEuclideanRemainder,
+  [AXIAL_SYMMETRY_ERROR_FORMULA]: computeAxialSymmetryError,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
