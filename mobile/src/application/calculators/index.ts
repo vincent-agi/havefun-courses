@@ -149,6 +149,25 @@ import {
   CONDUCTIVITY_RATIO_FORMULA,
   computeConductivityRatio,
 } from './conductivity-ratio';
+import { CELL_SIZE_FORMULA, computeCellSize } from './cell-size';
+import {
+  SHARED_TRAIT_RATIO_FORMULA,
+  computeSharedTraitRatio,
+} from './shared-trait-ratio';
+import { STRATUM_AGE_FORMULA, computeStratumAge } from './stratum-age';
+import {
+  MORPHOLOGICAL_RATIO_FORMULA,
+  computeMorphologicalRatio,
+} from './morphological-ratio';
+import {
+  PLANT_MASS_GAIN_FORMULA,
+  computePlantMassGain,
+} from './plant-mass-gain';
+import { BURIAL_RATE_FORMULA, computeBurialRate } from './burial-rate';
+import {
+  DOUGH_RISE_RATIO_FORMULA,
+  computeDoughRiseRatio,
+} from './dough-rise-ratio';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -201,6 +220,13 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [OXIDATION_MASS_GAIN_FORMULA]: computeOxidationMassGain,
   [DILUTED_ACID_PH_FORMULA]: computeDilutedAcidPh,
   [CONDUCTIVITY_RATIO_FORMULA]: computeConductivityRatio,
+  [CELL_SIZE_FORMULA]: computeCellSize,
+  [SHARED_TRAIT_RATIO_FORMULA]: computeSharedTraitRatio,
+  [STRATUM_AGE_FORMULA]: computeStratumAge,
+  [MORPHOLOGICAL_RATIO_FORMULA]: computeMorphologicalRatio,
+  [PLANT_MASS_GAIN_FORMULA]: computePlantMassGain,
+  [BURIAL_RATE_FORMULA]: computeBurialRate,
+  [DOUGH_RISE_RATIO_FORMULA]: computeDoughRiseRatio,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
