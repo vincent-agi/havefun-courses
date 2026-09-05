@@ -9,6 +9,10 @@ import {
   FOURTH_PROPORTIONAL_FORMULA,
   computeFourthProportional,
 } from './fourth-proportional';
+import {
+  EUCLIDEAN_REMAINDER_FORMULA,
+  computeEuclideanRemainder,
+} from './euclidean-division';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -17,6 +21,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [PI_FROM_CIRCLE_FORMULA]: computePiFromCircle,
   [RECTANGLE_DIAGONAL_FORMULA]: computeRectangleDiagonal,
   [FOURTH_PROPORTIONAL_FORMULA]: computeFourthProportional,
+  [EUCLIDEAN_REMAINDER_FORMULA]: computeEuclideanRemainder,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
