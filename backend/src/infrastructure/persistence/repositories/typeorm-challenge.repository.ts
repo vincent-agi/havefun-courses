@@ -20,6 +20,9 @@ function toDomain(entity: ChallengeOrmEntity): Challenge {
     narrativeIntro: entity.narrativeIntro,
     theoryExplanation: entity.theoryExplanation,
     calculatorSchema: entity.calculatorSchema,
+    notionKey: entity.notionKey ?? null,
+    guidedExperiment: entity.guidedExperiment ?? null,
+    autonomousChallenge: entity.autonomousChallenge ?? null,
     xpReward: entity.xpReward,
     createdAt: entity.createdAt,
   };
