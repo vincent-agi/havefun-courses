@@ -35,6 +35,7 @@ import {
   PYTHAGOREAN_HYPOTENUSE_FORMULA,
   computePythagoreanHypotenuse,
 } from './pythagorean-hypotenuse';
+import { GRAIN_COUNT_FORMULA, computeGrainCount } from './grain-count';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -51,6 +52,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [EARTH_CIRCUMFERENCE_FORMULA]: computeEarthCircumference,
   [PLANAR_DISTANCE_FORMULA]: computePlanarDistance,
   [PYTHAGOREAN_HYPOTENUSE_FORMULA]: computePythagoreanHypotenuse,
+  [GRAIN_COUNT_FORMULA]: computeGrainCount,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
