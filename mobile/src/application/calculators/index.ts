@@ -67,6 +67,23 @@ import {
 } from './weight-from-mass';
 import { DENSITY_FORMULA, computeDensity } from './density';
 import { SCALE_MODEL_FORMULA, computeScaleModel } from './scale-model';
+import {
+  SUN_ELEVATION_FROM_SHADOW_FORMULA,
+  computeSunElevationFromShadow,
+} from './sun-elevation-from-shadow';
+import {
+  PINHOLE_IMAGE_SIZE_FORMULA,
+  computePinholeImageSize,
+} from './pinhole-image-size';
+import {
+  ILLUMINATED_FRACTION_FORMULA,
+  computeIlluminatedFraction,
+} from './illuminated-fraction';
+import { PILE_VOLTAGE_FORMULA, computePileVoltage } from './pile-voltage';
+import {
+  BRANCH_CURRENT_SUM_FORMULA,
+  computeBranchCurrentSum,
+} from './branch-current-sum';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -94,6 +111,11 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [WEIGHT_FROM_MASS_FORMULA]: computeWeightFromMass,
   [DENSITY_FORMULA]: computeDensity,
   [SCALE_MODEL_FORMULA]: computeScaleModel,
+  [SUN_ELEVATION_FROM_SHADOW_FORMULA]: computeSunElevationFromShadow,
+  [PINHOLE_IMAGE_SIZE_FORMULA]: computePinholeImageSize,
+  [ILLUMINATED_FRACTION_FORMULA]: computeIlluminatedFraction,
+  [PILE_VOLTAGE_FORMULA]: computePileVoltage,
+  [BRANCH_CURRENT_SUM_FORMULA]: computeBranchCurrentSum,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
