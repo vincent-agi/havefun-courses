@@ -156,7 +156,7 @@ export function MissionScreen({ route, navigation }: Props) {
           {challenge.calculatorSchema.fields.map(field => (
             <View key={field.key} style={styles.field}>
               <Text style={styles.fieldLabel}>
-                {field.label} ({field.unit})
+                {field.unit ? `${field.label} (${field.unit})` : field.label}
               </Text>
               <TextInput
                 style={styles.input}
