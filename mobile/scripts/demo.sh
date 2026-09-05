@@ -51,10 +51,10 @@ cd "$BACKEND_DIR"
 log "Migrations"
 npm run migration:run
 
-if [ "$FIRST_RUN" = true ]; then
-  log "Seed (première initialisation)"
-  npm run seed
-fi
+# Le seed est idempotent : on le rejoue à chaque lancement pour que le
+# catalogue reflète toujours les missions définies dans le code.
+log "Seed (idempotent)"
+npm run seed
 
 log "Backend API"
 if ! curl -s -o /dev/null http://localhost:3000; then
