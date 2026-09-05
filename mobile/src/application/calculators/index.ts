@@ -45,6 +45,10 @@ import {
   computeHeightFromAngle,
 } from './height-from-angle';
 import { AVERAGE_SPEED_FORMULA, computeAverageSpeed } from './average-speed';
+import {
+  TRIANGULATION_DISTANCE_FORMULA,
+  computeTriangulationDistance,
+} from './triangulation-distance';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -65,6 +69,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [SQUARE_DIAGONAL_FORMULA]: computeSquareDiagonal,
   [HEIGHT_FROM_ANGLE_FORMULA]: computeHeightFromAngle,
   [AVERAGE_SPEED_FORMULA]: computeAverageSpeed,
+  [TRIANGULATION_DISTANCE_FORMULA]: computeTriangulationDistance,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
