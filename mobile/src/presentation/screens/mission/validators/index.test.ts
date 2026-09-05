@@ -16,6 +16,9 @@ describe('getExperimentValidator', () => {
       'pythagoras-3-4-5',
       'co2-limewater',
       'earthworm-burial',
+      'disk-area-exhaustion',
+      'weight-vs-mass',
+      'respiration-co2',
     ]) {
       expect(typeof getExperimentValidator(key)).toBe('function');
     }

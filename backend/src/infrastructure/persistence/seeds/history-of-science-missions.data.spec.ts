@@ -77,7 +77,7 @@ describe('HISTORY_OF_SCIENCE_MISSIONS', () => {
       expect(subjects).toEqual(
         new Set(['Chimie', 'Mathématiques', 'Physique', 'SVT']),
       );
-      expect(pilots.length).toBe(13);
+      expect(pilots.length).toBe(16);
     });
 
     it('a des clés de notion uniques et en kebab-case', () => {
@@ -110,7 +110,7 @@ describe('HISTORY_OF_SCIENCE_MISSIONS', () => {
 
     it('laisse les autres missions sur l’ancien parcours (sans notionKey)', () => {
       const nonPilots = HISTORY_OF_SCIENCE_MISSIONS.filter((m) => !m.notionKey);
-      expect(nonPilots).toHaveLength(56);
+      expect(nonPilots).toHaveLength(53);
       for (const mission of nonPilots) {
         expect(mission.guidedExperiment).toBeNull();
         expect(mission.autonomousChallenge).toBeNull();

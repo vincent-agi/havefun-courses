@@ -1044,6 +1044,180 @@ const PILOT_EARTHWORM: MissionExperiment = {
   },
 };
 
+const PILOT_DISK_AREA: MissionExperiment = {
+  notionKey: 'disk-area-exhaustion',
+  guidedExperiment: {
+    title: "Expérience guidée — encadrer l'aire d'un disque",
+    goal: "Encadrer l'aire d'un disque entre une valeur par défaut et une valeur par excès, comme la méthode d'exhaustion d'Archimède.",
+    materials: [
+      'Un cordeau et un piquet, de la craie',
+      'Un grand quadrillage tracé au sol (carreaux de 20 cm)',
+      'Une calculatrice',
+    ],
+    schema: [
+      '   +--+--+--+--+--+',
+      '   |  |##|##|##|  |   ## = carreau entierement dedans (par defaut)',
+      '   +--+##+##+##+--+   oo = carreau touche par le cercle (par exces)',
+      '   |##|##|##|##|##|',
+      '   +oo+##+##+##+oo+',
+      '   aire du disque  ENTRE  (nb ##)xaire  et  (nb ## + oo)xaire',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Trace au cordeau un cercle de rayon 1 m sur le quadrillage. Compte les carreaux entièrement à l'intérieur du cercle.",
+        question: "Cette somme d'aires est-elle plus petite ou plus grande que l'aire du disque ?",
+      },
+      {
+        instruction:
+          "Compte maintenant tous les carreaux qui touchent le cercle ou sont dedans. Cette somme est la valeur par excès.",
+        question: "L'aire du disque est-elle forcément comprise entre tes deux valeurs ?",
+      },
+      {
+        instruction:
+          "Calcule l'aire par défaut et l'aire par excès (nombre de carreaux × aire d'un carreau), puis compare l'intervalle à π × R² = π × 1² ≈ 3,14 m².",
+        question: "Si tu prenais des carreaux plus petits, l'encadrement se resserrerait-il autour de 3,14 ?",
+      },
+    ],
+    measures: [
+      "Aire d'un carreau (m²)",
+      'Nombre de carreaux entièrement dans le cercle',
+      'Nombre de carreaux touchés ou dans le cercle',
+    ],
+    interpretation:
+      "L'aire du disque est coincée entre les deux valeurs, et l'intervalle contient 3,14 m² (π × R²). En prenant des carreaux de plus en plus petits, on « épuise » l'écart, exactement comme Archimède avec ses polygones.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — l'aire d'une flaque",
+    brief:
+      "Estime l'aire d'une flaque, d'un massif ou d'une tache d'herbe de forme quelconque, uniquement en l'encadrant par des rectangles tracés à la craie : donne une valeur par défaut (rectangles entièrement dedans) et une valeur par excès (rectangles qui la contiennent).",
+    schema: [
+      '   +-----------+   rectangles PAR EXCES (contiennent la flaque)',
+      '   | +-------+ |',
+      '   | | ~~~~~ | |   rectangles PAR DEFAUT (a l\'interieur)',
+      '   | +-------+ |',
+      '   +-----------+',
+      '   aire  ENTRE  somme(defaut)  et  somme(exces)',
+    ].join('\n'),
+    successCriteria:
+      "Ta valeur par défaut est inférieure à ta valeur par excès, l'écart entre les deux reste raisonnable, et tu expliques qu'on ne peut donner qu'un encadrement car le bord est courbe.",
+  },
+};
+
+const PILOT_WEIGHT_MASS: MissionExperiment = {
+  notionKey: 'weight-vs-mass',
+  guidedExperiment: {
+    title: "Expérience guidée — la balance et le dynamomètre",
+    goal: "Distinguer la masse (propre à la matière) du poids (force qui dépend du lieu).",
+    materials: [
+      'Une balance, un dynamomètre (peson) gradué en newtons',
+      'Plusieurs objets : galet, brique, bouteille d\'eau',
+      'Une corde, une potence ou une branche solide',
+    ],
+    schema: [
+      '   BALANCE                 DYNAMOMETRE',
+      '   [====]                    | ressort',
+      '    || m (kg)                O <- crochet',
+      '                             | objet',
+      '   masse : quantite de       poids : force (N)',
+      '   matiere, invariable       P = m x g',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Pèse chaque objet à la balance : tu lis sa masse en kilogrammes.",
+        question: "La balance est-elle bien à zéro avant de poser l'objet ?",
+      },
+      {
+        instruction:
+          "Suspends chaque objet au dynamomètre : tu lis son poids en newtons.",
+        question: "Le poids en newtons est-il un nombre différent de la masse en kilogrammes ?",
+      },
+      {
+        instruction:
+          "Pour chaque objet, calcule le quotient poids ÷ masse. Compare les résultats.",
+        question: "Le quotient poids ÷ masse est-il le même pour tous les objets ?",
+      },
+    ],
+    measures: [
+      'Masse (kg) et poids (N) de chaque objet',
+      'Quotient poids ÷ masse pour chacun',
+    ],
+    interpretation:
+      "Le quotient poids ÷ masse est le même pour tous les objets, environ 9,8 N/kg : c'est l'intensité de la pesanteur g. La balance mesure une grandeur invariable (la masse) ; le dynamomètre mesure une force qui dépend de l'astre.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — le même sac sur trois astres",
+    brief:
+      "Tu pèses un sac : sa masse est de 5 kg. On te donne l'intensité de la pesanteur sur la Terre (9,8 N/kg), sur la Lune (1,6) et sur Mars (3,7). Prévois par le calcul le poids qu'indiquerait un dynamomètre pour ce sac sur chacun des trois astres.",
+    schema: [
+      '   masse du sac : 5 kg  (identique partout)',
+      '',
+      '   Terre : P = 5 x 9,8 = ?   N',
+      '   Lune  : P = 5 x 1,6 = ?   N',
+      '   Mars  : P = 5 x 3,7 = ?   N',
+    ].join('\n'),
+    successCriteria:
+      "Tes trois poids valent bien masse × g pour chaque astre, et tu identifies que c'est le poids qui change d'un astre à l'autre, pas la masse.",
+  },
+};
+
+const PILOT_RESPIRATION: MissionExperiment = {
+  notionKey: 'respiration-co2',
+  guidedExperiment: {
+    title: "Expérience guidée — l'air expiré trouble l'eau de chaux",
+    goal: "Montrer que la respiration rejette du dioxyde de carbone, et que l'effort l'intensifie.",
+    materials: [
+      "De l'eau de chaux limpide, des pailles, des gobelets, un chronomètre",
+      'Une seringue (pour l\'air ambiant témoin)',
+      'De quoi faire un effort (montée de marches, course courte)',
+    ],
+    schema: [
+      '   gobelet 1 : air expire     gobelet 2 : air ambiant (temoin)',
+      '   souffle a la paille        chasse a la seringue',
+      '   -> se trouble en t1 s      -> se trouble en t2 s (bien plus long)',
+      '',
+      '   au repos  vs  apres effort : compter les respirations / min',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Au repos, souffle à la paille dans un gobelet d'eau de chaux et chronomètre le temps au bout duquel elle se trouble. Fais de même avec de l'air ambiant chassé à la seringue dans un autre gobelet.",
+        question: "L'air expiré trouble-t-il l'eau de chaux beaucoup plus vite que l'air ambiant ?",
+      },
+      {
+        instruction:
+          "Toujours au repos, compte le nombre de respirations par minute.",
+        question: "Ta respiration est-elle lente et régulière au repos ?",
+      },
+      {
+        instruction:
+          "Fais un effort d'une à deux minutes, puis refais aussitôt les mesures : temps de trouble de l'eau de chaux et nombre de respirations par minute.",
+        question: "L'effort augmente-t-il la fréquence des respirations et le rejet de dioxyde de carbone ?",
+      },
+    ],
+    measures: [
+      "Temps de trouble de l'eau de chaux : air expiré (repos) et air ambiant (témoin)",
+      'Fréquence respiratoire au repos, puis après effort',
+    ],
+    interpretation:
+      "L'air expiré trouble l'eau de chaux bien plus vite que l'air ambiant : il est enrichi en dioxyde de carbone. À l'effort, on respire plus souvent et le rejet de dioxyde de carbone augmente : la respiration est une combustion lente qui s'intensifie avec l'activité, comme l'ont montré Lavoisier et Séguin.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — effort et consommation de l'organisme",
+    brief:
+      "Définis trois niveaux d'effort (marche, marche rapide, course). Pour chacun, après stabilisation, mesure la fréquence respiratoire ET la fréquence cardiaque. Trace les deux séries en fonction de l'effort et conclus sur le lien entre intensité de l'effort et consommation de l'organisme.",
+    schema: [
+      '   effort :   marche   marche rapide   course',
+      '   respi/min :  r1   <    r2       <    r3',
+      '   coeur/min :  c1   <    c2       <    c3',
+      '   -> plus l\'effort est intense, plus l\'organisme consomme',
+    ].join('\n'),
+    successCriteria:
+      "Tes deux séries (respiration et fréquence cardiaque) augmentent avec l'intensité de l'effort, et tu conclus que l'organisme consomme et rejette d'autant plus que l'effort est intense.",
+  },
+};
+
 export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
   // ------------------------- M1 · Mathématiques -------------------------
   m(
@@ -1088,6 +1262,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "On ne sait longtemps mesurer que des polygones. Archimède, puis Liu Hui en Chine, encadrent le disque entre polygones inscrit et circonscrit en multipliant les côtés jusqu'à rendre l'écart négligeable.",
     "L'aire du disque vaut A = π × R². On l'encadre par des polygones dont on sait calculer l'aire, de plus en plus proches du cercle.",
     'disk-area', 'Aire du disque (m²)', ['radiusM'],
+    PILOT_DISK_AREA,
   ),
   m(
     '1.7', 'Mathématiques', S5,
@@ -1197,6 +1372,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Newton unifie la chute d'une pomme et le mouvement de la Lune dans une même force, la gravitation universelle. Elle explique pourquoi un corps « pèse » moins en altitude ou sur la Lune.",
     "La masse (kg) est propre à la matière ; le poids (N) dépend de l'astre : P = m × g, où g est l'intensité de la pesanteur du lieu.",
     'weight-from-mass', 'Poids (N)', ['massKg', 'gravityNPerKg'],
+    PILOT_WEIGHT_MASS,
   ),
   m(
     '2.4', 'Physique', S6,
@@ -1468,6 +1644,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Lavoisier mesure le dioxygène consommé et le dioxyde de carbone rejeté par Séguin au repos, en digestion et à l'effort : la respiration est une combustion lente qui s'intensifie avec l'activité.",
     "Débit ventilatoire = volume d'un souffle × nombre de respirations par minute. Il augmente nettement à l'effort.",
     'ventilation-rate', 'Débit ventilatoire (mL/min)', ['breathVolumeMl', 'breathsPerMinute'],
+    PILOT_RESPIRATION,
   ),
   m(
     '4.11', 'SVT', S5,

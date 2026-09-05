@@ -13,6 +13,9 @@ import { MendelRatioValidator } from './MendelRatioValidator';
 import { PythagorasValidator } from './PythagorasValidator';
 import { Co2LimewaterValidator } from './Co2LimewaterValidator';
 import { EarthwormBurialValidator } from './EarthwormBurialValidator';
+import { DiskAreaExhaustionValidator } from './DiskAreaExhaustionValidator';
+import { WeightVsMassValidator } from './WeightVsMassValidator';
+import { RespirationCo2Validator } from './RespirationCo2Validator';
 
 /**
  * Un validateur d'expérience par notion (forme et fond spécifiques).
@@ -35,6 +38,9 @@ const VALIDATORS: Record<
   'pythagoras-3-4-5': PythagorasValidator,
   'co2-limewater': Co2LimewaterValidator,
   'earthworm-burial': EarthwormBurialValidator,
+  'disk-area-exhaustion': DiskAreaExhaustionValidator,
+  'weight-vs-mass': WeightVsMassValidator,
+  'respiration-co2': RespirationCo2Validator,
 };
 
 export function getExperimentValidator(
