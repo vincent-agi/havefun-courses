@@ -36,6 +36,7 @@ export function MissionScreen({ route, navigation }: Props) {
   const [submissionResult, setSubmissionResult] = useState<Submission | null>(
     null,
   );
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     container.getChallengeDetailUseCase
@@ -70,6 +71,7 @@ export function MissionScreen({ route, navigation }: Props) {
 
   const handleSubmit = async () => {
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const submission = await container.submitProofUseCase.execute({
         challengeId,
@@ -78,6 +80,12 @@ export function MissionScreen({ route, navigation }: Props) {
         photoUri: photoUri ?? undefined,
       });
       setSubmissionResult(submission);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Échec de l'envoi de la preuve. Réessaie.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -184,6 +192,7 @@ export function MissionScreen({ route, navigation }: Props) {
         <View style={styles.stepBlock}>
           <Text style={styles.title}>Preuve de terrain</Text>
           <PhotoUploadField photoUri={photoUri} onChange={setPhotoUri} />
+          {submitError && <Text style={styles.warning}>{submitError}</Text>}
           <Button
             label="Envoyer ma preuve"
             onPress={handleSubmit}

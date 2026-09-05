@@ -9,8 +9,6 @@ export type SubmitProofInput = {
   photoUri?: string;
 };
 
-const PHOTO_CONTENT_TYPE = 'image/jpeg';
-
 export class SubmitProofUseCase {
   constructor(
     private readonly mediaRepository: MediaRepository,
@@ -21,14 +19,8 @@ export class SubmitProofUseCase {
     let mediaUrl: string | undefined;
 
     if (input.photoUri) {
-      const { uploadUrl, mediaUrl: resolvedMediaUrl } =
-        await this.mediaRepository.requestUploadUrl(PHOTO_CONTENT_TYPE);
-      await this.mediaRepository.uploadFile(
-        uploadUrl,
-        input.photoUri,
-        PHOTO_CONTENT_TYPE,
-      );
-      mediaUrl = resolvedMediaUrl;
+      const uploaded = await this.mediaRepository.uploadPhoto(input.photoUri);
+      mediaUrl = uploaded.mediaUrl;
     }
 
     return this.submissionRepository.create(input.challengeId, {

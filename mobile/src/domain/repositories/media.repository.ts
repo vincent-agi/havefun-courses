@@ -1,13 +1,8 @@
-export interface UploadUrlResult {
-  uploadUrl: string;
+export interface UploadPhotoResult {
+  /** URL relative renvoyée par l'API, ex : "/media/<id>". */
   mediaUrl: string;
 }
 
 export interface MediaRepository {
-  requestUploadUrl(contentType: string): Promise<UploadUrlResult>;
-  uploadFile(
-    uploadUrl: string,
-    fileUri: string,
-    contentType: string,
-  ): Promise<void>;
+  uploadPhoto(fileUri: string): Promise<UploadPhotoResult>;
 }
