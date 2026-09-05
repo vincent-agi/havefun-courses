@@ -27,6 +27,10 @@ import {
   EARTH_CIRCUMFERENCE_FORMULA,
   computeEarthCircumference,
 } from './earth-circumference';
+import {
+  PLANAR_DISTANCE_FORMULA,
+  computePlanarDistance,
+} from './planar-distance';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -41,6 +45,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [NET_BALANCE_FORMULA]: computeNetBalance,
   [LOWEST_COMMON_MULTIPLE_FORMULA]: computeLowestCommonMultiple,
   [EARTH_CIRCUMFERENCE_FORMULA]: computeEarthCircumference,
+  [PLANAR_DISTANCE_FORMULA]: computePlanarDistance,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
