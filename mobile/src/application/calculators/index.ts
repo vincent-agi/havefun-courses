@@ -168,6 +168,28 @@ import {
   DOUGH_RISE_RATIO_FORMULA,
   computeDoughRiseRatio,
 } from './dough-rise-ratio';
+import {
+  EPICENTRAL_DISTANCE_FORMULA,
+  computeEpicentralDistance,
+} from './epicentral-distance';
+import {
+  LAVA_FLOW_SPEED_FORMULA,
+  computeLavaFlowSpeed,
+} from './lava-flow-speed';
+import {
+  VENTILATION_RATE_FORMULA,
+  computeVentilationRate,
+} from './ventilation-rate';
+import { DIGESTION_RATE_FORMULA, computeDigestionRate } from './digestion-rate';
+import { ATTACK_RATE_FORMULA, computeAttackRate } from './attack-rate';
+import {
+  PHOTOSYNTHESIS_BUBBLE_RATE_FORMULA,
+  computePhotosynthesisBubbleRate,
+} from './photosynthesis-bubble-rate';
+import {
+  PHENOTYPE_RATIO_FORMULA,
+  computePhenotypeRatio,
+} from './phenotype-ratio';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -227,6 +249,13 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [PLANT_MASS_GAIN_FORMULA]: computePlantMassGain,
   [BURIAL_RATE_FORMULA]: computeBurialRate,
   [DOUGH_RISE_RATIO_FORMULA]: computeDoughRiseRatio,
+  [EPICENTRAL_DISTANCE_FORMULA]: computeEpicentralDistance,
+  [LAVA_FLOW_SPEED_FORMULA]: computeLavaFlowSpeed,
+  [VENTILATION_RATE_FORMULA]: computeVentilationRate,
+  [DIGESTION_RATE_FORMULA]: computeDigestionRate,
+  [ATTACK_RATE_FORMULA]: computeAttackRate,
+  [PHOTOSYNTHESIS_BUBBLE_RATE_FORMULA]: computePhotosynthesisBubbleRate,
+  [PHENOTYPE_RATIO_FORMULA]: computePhenotypeRatio,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
