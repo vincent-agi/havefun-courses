@@ -84,6 +84,24 @@ import {
   BRANCH_CURRENT_SUM_FORMULA,
   computeBranchCurrentSum,
 } from './branch-current-sum';
+import { OHM_RESISTANCE_FORMULA, computeOhmResistance } from './ohm-resistance';
+import {
+  GRATING_WAVELENGTH_FORMULA,
+  computeGratingWavelength,
+} from './grating-wavelength';
+import {
+  TELESCOPE_MAGNIFICATION_FORMULA,
+  computeTelescopeMagnification,
+} from './telescope-magnification';
+import {
+  LIGHT_TRAVEL_TIME_FORMULA,
+  computeLightTravelTime,
+} from './light-travel-time';
+import {
+  RESULTANT_FORCE_FORMULA,
+  computeResultantForce,
+} from './resultant-force';
+import { KINETIC_ENERGY_FORMULA, computeKineticEnergy } from './kinetic-energy';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -116,6 +134,12 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [ILLUMINATED_FRACTION_FORMULA]: computeIlluminatedFraction,
   [PILE_VOLTAGE_FORMULA]: computePileVoltage,
   [BRANCH_CURRENT_SUM_FORMULA]: computeBranchCurrentSum,
+  [OHM_RESISTANCE_FORMULA]: computeOhmResistance,
+  [GRATING_WAVELENGTH_FORMULA]: computeGratingWavelength,
+  [TELESCOPE_MAGNIFICATION_FORMULA]: computeTelescopeMagnification,
+  [LIGHT_TRAVEL_TIME_FORMULA]: computeLightTravelTime,
+  [RESULTANT_FORCE_FORMULA]: computeResultantForce,
+  [KINETIC_ENERGY_FORMULA]: computeKineticEnergy,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
