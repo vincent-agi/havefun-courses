@@ -31,6 +31,10 @@ import {
   PLANAR_DISTANCE_FORMULA,
   computePlanarDistance,
 } from './planar-distance';
+import {
+  PYTHAGOREAN_HYPOTENUSE_FORMULA,
+  computePythagoreanHypotenuse,
+} from './pythagorean-hypotenuse';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -46,6 +50,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [LOWEST_COMMON_MULTIPLE_FORMULA]: computeLowestCommonMultiple,
   [EARTH_CIRCUMFERENCE_FORMULA]: computeEarthCircumference,
   [PLANAR_DISTANCE_FORMULA]: computePlanarDistance,
+  [PYTHAGOREAN_HYPOTENUSE_FORMULA]: computePythagoreanHypotenuse,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
