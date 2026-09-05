@@ -65,6 +65,7 @@ import {
   WEIGHT_FROM_MASS_FORMULA,
   computeWeightFromMass,
 } from './weight-from-mass';
+import { DENSITY_FORMULA, computeDensity } from './density';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -90,6 +91,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [RELATIVE_VELOCITY_FORMULA]: computeRelativeVelocity,
   [ACCELERATION_FROM_DROP_FORMULA]: computeAccelerationFromDrop,
   [WEIGHT_FROM_MASS_FORMULA]: computeWeightFromMass,
+  [DENSITY_FORMULA]: computeDensity,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
