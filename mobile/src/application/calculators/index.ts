@@ -36,6 +36,10 @@ import {
   computePythagoreanHypotenuse,
 } from './pythagorean-hypotenuse';
 import { GRAIN_COUNT_FORMULA, computeGrainCount } from './grain-count';
+import {
+  SQUARE_DIAGONAL_FORMULA,
+  computeSquareDiagonal,
+} from './square-diagonal';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -53,6 +57,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [PLANAR_DISTANCE_FORMULA]: computePlanarDistance,
   [PYTHAGOREAN_HYPOTENUSE_FORMULA]: computePythagoreanHypotenuse,
   [GRAIN_COUNT_FORMULA]: computeGrainCount,
+  [SQUARE_DIAGONAL_FORMULA]: computeSquareDiagonal,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
