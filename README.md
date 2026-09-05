@@ -24,6 +24,11 @@ Le projet s'inscrit dans le cadre de l'**ODD 4 de l'ONU — Éducation de Qualit
 
 Le détail des choix et leurs justifications sont documentés dans [`docs/architecture.md`](docs/architecture.md). La charte graphique et les composants sont documentés dans [`docs/design-system.md`](docs/design-system.md). Le guide de mise en production est dans [`docs/deployment.md`](docs/deployment.md), l'audit RGPD/accessibilité dans [`docs/rgpd-accessibilite.md`](docs/rgpd-accessibilite.md). La documentation API interactive (Swagger) est servie sur `/docs` par l'API en cours d'exécution.
 
+Prise en main de l'application mobile :
+
+- [`docs/guide-utilisateur.md`](docs/guide-utilisateur.md) — utiliser l'application (élèves, enseignants).
+- [`docs/guide-installation-mobile.md`](docs/guide-installation-mobile.md) — builder et lancer l'application sur iOS et Android (développeurs).
+
 ## Structure du dépôt
 
 ```
@@ -43,6 +48,20 @@ havefun-courses/
 - Xcode (build iOS) et/ou Android Studio (build Android)
 
 ### Backend
+
+Sans instance MariaDB déjà disponible, un conteneur local suffit :
+
+```bash
+docker run -d --name havefun-mariadb \
+  -e MARIADB_DATABASE=havefun_courses \
+  -e MARIADB_USER=havefun \
+  -e MARIADB_PASSWORD=changeme \
+  -e MARIADB_ROOT_PASSWORD=changeme \
+  -p 3306:3306 \
+  mariadb:10.11
+```
+
+(`docker` peut être remplacé par `podman` selon l'outil installé.) Les identifiants ci-dessus correspondent aux valeurs par défaut de `.env.example`.
 
 ```bash
 cd backend

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
 import { PersistenceModule } from '../../../infrastructure/persistence/persistence.module.js';
 import { GetCurrentUserUseCase } from '../../../application/use-cases/users/get-current-user.use-case.js';
 import { UpdateOnboardingUseCase } from '../../../application/use-cases/users/update-onboarding.use-case.js';
@@ -8,7 +9,7 @@ import { GeneratePassCompetencesPdfUseCase } from '../../../application/use-case
 import { UsersController } from '../../controllers/users.controller.js';
 
 @Module({
-  imports: [PersistenceModule],
+  imports: [PersistenceModule, PassportModule.register({ defaultStrategy: 'jwt' })],
   controllers: [UsersController],
   providers: [
     GetCurrentUserUseCase,
