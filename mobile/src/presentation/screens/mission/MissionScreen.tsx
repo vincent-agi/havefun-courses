@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -19,10 +19,34 @@ import { XPBar } from '../../components/XPBar';
 import { BadgeIcon } from '../../components/BadgeIcon';
 import { colors, spacing, typography } from '../../theme/tokens';
 import type { MainStackParamList } from '../../navigation/MainNavigator';
+import { getExperimentValidator } from './validators';
 
 type Props = NativeStackScreenProps<MainStackParamList, 'Mission'>;
 
-const STEP_COUNT = 4;
+function SchemaBlock({ schema }: { schema: string }) {
+  return (
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator
+      style={styles.schemaScroll}
+      contentContainerStyle={styles.schemaContent}
+    >
+      <Text style={styles.schemaText}>{schema}</Text>
+    </ScrollView>
+  );
+}
+
+function Bullets({ items }: { items: string[] }) {
+  return (
+    <View style={styles.bullets}>
+      {items.map((item, i) => (
+        <Text key={i} style={styles.bulletLine}>
+          {'•'} {item}
+        </Text>
+      ))}
+    </View>
+  );
+}
 
 export function MissionScreen({ route, navigation }: Props) {
   const { challengeId } = route.params;
@@ -45,6 +69,11 @@ export function MissionScreen({ route, navigation }: Props) {
       .finally(() => setLoading(false));
   }, [challengeId]);
 
+  const Validator = useMemo(
+    () => getExperimentValidator(challenge?.notionKey),
+    [challenge?.notionKey],
+  );
+
   if (loading || !challenge) {
     return (
       <View style={styles.center}>
@@ -52,6 +81,10 @@ export function MissionScreen({ route, navigation }: Props) {
       </View>
     );
   }
+
+  const useExperimentFlow = Boolean(
+    Validator && challenge.guidedExperiment && challenge.autonomousChallenge,
+  );
 
   const calculator = getCalculator(challenge.calculatorSchema.formula);
   const numericMeasurements = Object.fromEntries(
@@ -75,8 +108,9 @@ export function MissionScreen({ route, navigation }: Props) {
     try {
       const submission = await container.submitProofUseCase.execute({
         challengeId,
-        measurements: allFieldsValid ? numericMeasurements : undefined,
-        result: result ?? undefined,
+        measurements:
+          !useExperimentFlow && allFieldsValid ? numericMeasurements : undefined,
+        result: !useExperimentFlow && result !== null ? result : undefined,
         photoUri: photoUri ?? undefined,
       });
       setSubmissionResult(submission);
@@ -125,9 +159,128 @@ export function MissionScreen({ route, navigation }: Props) {
     );
   }
 
+  if (useExperimentFlow && Validator) {
+    const guided = challenge.guidedExperiment!;
+    const defi = challenge.autonomousChallenge!;
+    const EXPERIMENT_STEPS = 7;
+
+    return (
+      <ScrollView contentContainerStyle={styles.container}>
+        <StepIndicator totalSteps={EXPERIMENT_STEPS} currentStep={step} />
+
+        {step === 0 && (
+          <View style={styles.stepBlock}>
+            <Text style={styles.title}>{challenge.title}</Text>
+            <Text style={styles.kicker}>Le contexte historique</Text>
+            <Text style={styles.body}>{challenge.narrativeIntro}</Text>
+            <Button label="Continuer" onPress={() => setStep(1)} />
+          </View>
+        )}
+
+        {step === 1 && (
+          <View style={styles.stepBlock}>
+            <Text style={styles.title}>La notion</Text>
+            <Text style={styles.body}>{challenge.theoryExplanation}</Text>
+            <Button label="Passer à l'expérience" onPress={() => setStep(2)} />
+          </View>
+        )}
+
+        {step === 2 && (
+          <View style={styles.stepBlock}>
+            <Text style={styles.title}>Expérience 1 — guidée</Text>
+            <Text style={styles.subtitle}>{guided.title}</Text>
+            <Text style={styles.body}>{guided.goal}</Text>
+
+            <Text style={styles.kicker}>Matériel</Text>
+            <Bullets items={guided.materials} />
+
+            <Text style={styles.kicker}>Schéma</Text>
+            <SchemaBlock schema={guided.schema} />
+
+            <Text style={styles.kicker}>Protocole</Text>
+            {guided.steps.map((protocolStep, i) => (
+              <View key={i} style={styles.protocolStep}>
+                <Text style={styles.protocolNum}>{i + 1}</Text>
+                <View style={styles.protocolText}>
+                  <Text style={styles.body}>{protocolStep.instruction}</Text>
+                  {protocolStep.question ? (
+                    <Text style={styles.question}>
+                      {'→'} À se demander : {protocolStep.question}
+                    </Text>
+                  ) : null}
+                </View>
+              </View>
+            ))}
+
+            <Text style={styles.kicker}>À relever</Text>
+            <Bullets items={guided.measures} />
+
+            <Text style={styles.kicker}>Interprétation attendue</Text>
+            <Text style={styles.body}>{guided.interpretation}</Text>
+
+            <Button
+              label="J'ai réalisé l'expérience"
+              onPress={() => setStep(3)}
+            />
+          </View>
+        )}
+
+        {step === 3 && (
+          <View style={styles.stepBlock}>
+            <Text style={styles.title}>Valider l'expérience 1</Text>
+            <Text style={styles.body}>
+              Reporte tes mesures et tes observations.
+            </Text>
+            <Validator phase="guided" onValidated={() => setStep(4)} />
+          </View>
+        )}
+
+        {step === 4 && (
+          <View style={styles.stepBlock}>
+            <Text style={styles.title}>Expérience 2 — en autonomie</Text>
+            <Text style={styles.subtitle}>{defi.title}</Text>
+            <Text style={styles.body}>{defi.brief}</Text>
+
+            <Text style={styles.kicker}>Schéma</Text>
+            <SchemaBlock schema={defi.schema} />
+
+            <Text style={styles.kicker}>Réussite</Text>
+            <Text style={styles.body}>{defi.successCriteria}</Text>
+
+            <Button label="J'ai relevé le défi" onPress={() => setStep(5)} />
+          </View>
+        )}
+
+        {step === 5 && (
+          <View style={styles.stepBlock}>
+            <Text style={styles.title}>Valider le défi</Text>
+            <Validator phase="autonomous" onValidated={() => setStep(6)} />
+          </View>
+        )}
+
+        {step === 6 && (
+          <View style={styles.stepBlock}>
+            <Text style={styles.title}>Preuve de terrain</Text>
+            <Text style={styles.body}>
+              Ajoute une photo de ton expérience pour valider la mission.
+            </Text>
+            <PhotoUploadField photoUri={photoUri} onChange={setPhotoUri} />
+            {submitError && <Text style={styles.warning}>{submitError}</Text>}
+            <Button
+              label="Envoyer ma preuve"
+              onPress={handleSubmit}
+              loading={submitting}
+              disabled={!photoUri}
+            />
+          </View>
+        )}
+      </ScrollView>
+    );
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <StepIndicator totalSteps={STEP_COUNT} currentStep={step} />
+      <StepIndicator totalSteps={4} currentStep={step} />
 
       {step === 0 && (
         <View style={styles.stepBlock}>
@@ -229,10 +382,66 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.xl,
     fontWeight: '700',
   },
+  subtitle: {
+    color: colors.text.primary,
+    fontSize: typography.fontSize.lg,
+    fontWeight: '700',
+  },
+  kicker: {
+    color: colors.accent.primary,
+    fontSize: typography.fontSize.sm,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
   body: {
     color: colors.text.secondary,
     fontSize: typography.fontSize.md,
     lineHeight: 22,
+  },
+  question: {
+    color: colors.accent.secondary,
+    fontSize: typography.fontSize.sm,
+    lineHeight: 20,
+    marginTop: spacing.xs,
+  },
+  bullets: {
+    gap: spacing.xs,
+  },
+  bulletLine: {
+    color: colors.text.secondary,
+    fontSize: typography.fontSize.md,
+    lineHeight: 22,
+  },
+  protocolStep: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    alignItems: 'flex-start',
+  },
+  protocolNum: {
+    color: colors.text.primary,
+    fontSize: typography.fontSize.md,
+    fontWeight: '700',
+    minWidth: 20,
+    textAlign: 'center',
+  },
+  protocolText: {
+    flex: 1,
+  },
+  schemaScroll: {
+    borderRadius: 8,
+    backgroundColor: colors.background.surface,
+    borderWidth: 1,
+    borderColor: colors.border.subtle,
+  },
+  schemaContent: {
+    padding: spacing.md,
+  },
+  schemaText: {
+    color: colors.text.primary,
+    fontFamily: 'monospace',
+    fontSize: typography.fontSize.sm,
+    lineHeight: 18,
   },
   warning: {
     color: colors.accent.warning,
