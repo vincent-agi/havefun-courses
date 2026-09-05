@@ -57,6 +57,10 @@ import {
   RELATIVE_VELOCITY_FORMULA,
   computeRelativeVelocity,
 } from './relative-velocity';
+import {
+  ACCELERATION_FROM_DROP_FORMULA,
+  computeAccelerationFromDrop,
+} from './acceleration-from-drop';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -80,6 +84,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [TRIANGULATION_DISTANCE_FORMULA]: computeTriangulationDistance,
   [EQUIPROBABILITY_FORMULA]: computeEquiprobability,
   [RELATIVE_VELOCITY_FORMULA]: computeRelativeVelocity,
+  [ACCELERATION_FROM_DROP_FORMULA]: computeAccelerationFromDrop,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
