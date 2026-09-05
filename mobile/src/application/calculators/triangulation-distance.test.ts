@@ -1,12 +1,12 @@
 import { computeTriangulationDistance } from './triangulation-distance';
 
 describe('computeTriangulationDistance', () => {
-  it('triangle isocele : angles egaux -> AC = base', () => {
+  it('triangle equilateral (60 deg / 60 deg) : AC = base', () => {
     expect(
       computeTriangulationDistance({
         baseM: 30,
-        angleADeg: 70,
-        angleBDeg: 70,
+        angleADeg: 60,
+        angleBDeg: 60,
       }),
     ).toBeCloseTo(30);
   });
