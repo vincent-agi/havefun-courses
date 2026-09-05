@@ -49,6 +49,10 @@ import {
   TRIANGULATION_DISTANCE_FORMULA,
   computeTriangulationDistance,
 } from './triangulation-distance';
+import {
+  EQUIPROBABILITY_FORMULA,
+  computeEquiprobability,
+} from './equiprobability';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -70,6 +74,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [HEIGHT_FROM_ANGLE_FORMULA]: computeHeightFromAngle,
   [AVERAGE_SPEED_FORMULA]: computeAverageSpeed,
   [TRIANGULATION_DISTANCE_FORMULA]: computeTriangulationDistance,
+  [EQUIPROBABILITY_FORMULA]: computeEquiprobability,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
