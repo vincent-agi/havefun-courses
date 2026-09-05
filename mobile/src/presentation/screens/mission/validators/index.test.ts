@@ -19,6 +19,9 @@ describe('getExperimentValidator', () => {
       'disk-area-exhaustion',
       'weight-vs-mass',
       'respiration-co2',
+      'proportionality-rule-of-three',
+      'circuit-pile',
+      'cell-unit',
     ]) {
       expect(typeof getExperimentValidator(key)).toBe('function');
     }

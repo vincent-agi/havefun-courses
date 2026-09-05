@@ -16,6 +16,9 @@ import { EarthwormBurialValidator } from './EarthwormBurialValidator';
 import { DiskAreaExhaustionValidator } from './DiskAreaExhaustionValidator';
 import { WeightVsMassValidator } from './WeightVsMassValidator';
 import { RespirationCo2Validator } from './RespirationCo2Validator';
+import { ProportionalityRuleValidator } from './ProportionalityRuleValidator';
+import { CircuitPileValidator } from './CircuitPileValidator';
+import { CellUnitValidator } from './CellUnitValidator';
 
 /**
  * Un validateur d'expérience par notion (forme et fond spécifiques).
@@ -41,6 +44,9 @@ const VALIDATORS: Record<
   'disk-area-exhaustion': DiskAreaExhaustionValidator,
   'weight-vs-mass': WeightVsMassValidator,
   'respiration-co2': RespirationCo2Validator,
+  'proportionality-rule-of-three': ProportionalityRuleValidator,
+  'circuit-pile': CircuitPileValidator,
+  'cell-unit': CellUnitValidator,
 };
 
 export function getExperimentValidator(

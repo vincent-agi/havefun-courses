@@ -1218,6 +1218,174 @@ const PILOT_RESPIRATION: MissionExperiment = {
   },
 };
 
+const PILOT_PROPORTIONALITY: MissionExperiment = {
+  notionKey: 'proportionality-rule-of-three',
+  guidedExperiment: {
+    title: "Expérience guidée — le prix qui suit la masse",
+    goal: "Vérifier qu'un prix est proportionnel à la masse, et retrouver la quatrième grandeur par la règle de trois.",
+    materials: [
+      'Une balance de cuisine, une calculatrice, un carnet',
+      "Des lots de fruits ou légumes (ou sachets de sable étiquetés)",
+      "Des étiquettes de prix « au kilo »",
+    ],
+    schema: [
+      "   prix au kilo : p  (EUR/kg)",
+      '   portion pesee : m (g)',
+      '',
+      "   prix de la portion = p / 1000 x m   (passage a l'unite)",
+      '   portion doublee -> prix double ;  triplee -> prix triple',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Relève le prix au kilo d'un produit, puis pèse une portion réelle de ce produit.",
+        question: "Quelle est la masse de ta portion, et le prix affiché au kilo ?",
+      },
+      {
+        instruction:
+          "Calcule le prix de ta portion : prix au kilo ÷ 1000 × masse en grammes.",
+        question: "Ton résultat est-il cohérent avec ce que tu paierais en caisse ?",
+      },
+      {
+        instruction:
+          "Double puis triple la portion, et calcule à chaque fois le prix. Compare au prix de la portion simple.",
+        question: "Quand tu doubles la masse, le prix double-t-il exactement ?",
+      },
+    ],
+    measures: [
+      "Prix au kilo (EUR/kg) et masse de la portion (g)",
+      "Prix calculé pour la portion simple, la portion double, la portion triple",
+    ],
+    interpretation:
+      "Le prix est proportionnel à la masse : le coefficient est le prix au gramme. Doubler la masse double le prix, la tripler le triple. C'est la règle de trois diffusée par Fibonacci.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la carte à l'échelle 1/2000",
+    brief:
+      "On te remet un plan du quartier à l'échelle 1/2000. Un trajet y mesure une certaine longueur (en cm sur le plan). Prévois la longueur réelle du trajet, puis vérifie en le mesurant au décamètre sur le terrain.",
+    schema: [
+      '   echelle 1/2000  :  1 cm sur le plan  =  2000 cm en realite',
+      '',
+      '   longueur sur le plan : L_plan (cm)',
+      '   longueur reelle prevue = L_plan x 2000  (en cm)  = L_plan x 20 (en m)',
+    ].join('\n'),
+    successCriteria:
+      "Ta longueur réelle prévue vaut bien la longueur sur le plan × 2000 (soit × 20 pour l'avoir en mètres), et ta mesure au décamètre la confirme à moins de 10 % près.",
+  },
+};
+
+const PILOT_CIRCUIT_PILE: MissionExperiment = {
+  notionKey: 'circuit-pile',
+  guidedExperiment: {
+    title: "Expérience guidée — empiler pour faire une pile",
+    goal: "Voir qu'un générateur et une boucle fermée de conducteurs suffisent à faire circuler un courant, et qu'empiler des éléments augmente la tension.",
+    materials: [
+      'Des pièces en cuivre, des rondelles de zinc, du papier absorbant',
+      'Du vinaigre salé, des fils à pinces crocodiles',
+      'Une DEL (ou un petit moteur), un multimètre',
+    ],
+    schema: [
+      '   cuivre  |###|  }',
+      '   papier  |~~~|  }  1 element',
+      '   zinc    |###|  }',
+      '   ... on empile plusieurs elements ...',
+      '',
+      '   tension de la pile mesuree au multimetre : croit avec le nombre d\'elements',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Empile cuivre / papier imbibé de vinaigre salé / zinc, plusieurs fois. Mesure la tension aux extrémités au multimètre pour 1, puis 3, puis 6 étages.",
+        question: "La tension augmente-t-elle avec le nombre d'étages ?",
+      },
+      {
+        instruction:
+          "Relie la pile à une DEL par des fils (respecte le sens). Insère un interrupteur bricolé et ouvre / ferme le circuit.",
+        question: "La DEL s'allume-t-elle quand le circuit est ouvert ?",
+      },
+      {
+        instruction:
+          "Identifie la boucle du circuit. Coupe un fil : que se passe-t-il ?",
+        question: "Faut-il une boucle complète de conducteurs pour que le courant passe ?",
+      },
+    ],
+    measures: [
+      "Tension de la pile pour 1, 3 et 6 étages",
+      "État de la DEL selon circuit ouvert / fermé",
+    ],
+    interpretation:
+      "Un générateur, une boucle fermée de conducteurs et un récepteur suffisent à faire circuler un courant. Plus on empile d'éléments, plus la tension est grande : c'est la pile de Volta reconstituée.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la pile aux fruits",
+    brief:
+      "À partir de fruits (citrons, pommes de terre), de clous galvanisés (zinc) et de pièces de cuivre, monte une pile capable d'allumer une DEL. Détermine combien d'éléments il faut mettre en série, puis repère sur ton schéma le sens conventionnel du courant.",
+    schema: [
+      '   [citron]--Cu   Zn--[citron]--Cu   Zn--[citron]--Cu   ... --> DEL',
+      '',
+      "   tension d'un element : ~0,7 a 1 V",
+      '   sens conventionnel : de la borne + vers la borne - a l\'exterieur du generateur',
+    ].join('\n'),
+    successCriteria:
+      "Tu mets assez d'éléments en série pour dépasser environ 1,8 V (nécessaire à une DEL rouge), et tu indiques que le sens conventionnel du courant va de la borne + vers la borne − à l'extérieur du générateur.",
+  },
+};
+
+const PILOT_CELL_UNIT: MissionExperiment = {
+  notionKey: 'cell-unit',
+  guidedExperiment: {
+    title: "Expérience guidée — chercher la cellule partout",
+    goal: "Vérifier que tous les êtres vivants sont faits de cellules, contrairement à la matière non vivante.",
+    materials: [
+      'Un microscope (ou loupe numérique), des lames et lamelles, des pipettes',
+      "De l'eau de mare, un oignon, un rameau d'élodée ou de mousse",
+      'Un cure-dent, du bleu de méthylène très dilué',
+    ],
+    schema: [
+      '   oignon (epiderme)   elodee (feuille)   joue (frottis)   eau de mare',
+      '        [ ][ ][ ]          [ ][ ][ ]         o  o  o          ~ o ~ o ~',
+      '   -> cellules              -> cellules       -> cellules      -> micro-organismes',
+      '',
+      '   grain de sable / cristal de sel  ->  PAS de cellules',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Prépare une lame d'épiderme d'oignon, une de feuille d'élodée, une goutte d'eau de mare, et un frottis de joue prélevé au cure-dent.",
+        question: "Les préparations sont-elles assez fines pour laisser passer la lumière ?",
+      },
+      {
+        instruction:
+          "Observe chaque préparation du plus faible au plus fort grossissement, et dessine ce que tu vois.",
+        question: "Retrouves-tu une organisation en petites unités (des cellules) dans chaque échantillon vivant ?",
+      },
+      {
+        instruction:
+          "Observe aussi un grain de sable et un cristal de sel, puis trie toutes les préparations : « on y voit des cellules » ou « on n'y voit pas de cellules ».",
+        question: "Le sable et le sel contiennent-ils des cellules ?",
+      },
+    ],
+    measures: [
+      "Pour chaque préparation : présence ou non de cellules, et leur disposition",
+      "Présence éventuelle de micro-organismes mobiles dans l'eau de mare",
+    ],
+    interpretation:
+      "Oignon, élodée, joue et micro-organismes de la mare montrent tous des cellules, alors que le sable ou le sel n'en ont pas. La cellule est l'unité commune du vivant, comme l'ont établi Hooke, Leeuwenhoek puis Schleiden et Schwann.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — vivant ou non ?",
+    brief:
+      "Rapporte trois échantillons de la cour : de la mousse, une plume, un caillou. Pour chacun, prépare et observe, puis détermine s'il s'agit de matière vivante (ou issue du vivant) ou de matière qui n'a jamais été vivante, en te fondant uniquement sur la présence de cellules.",
+    schema: [
+      '   mousse   ->  cellules  ->  vivant',
+      '   plume    ->  structure cellulaire (kératine)  ->  issu du vivant',
+      '   caillou  ->  pas de cellules  ->  jamais vivant',
+    ].join('\n'),
+    successCriteria:
+      "Tu classes correctement les trois échantillons (mousse et plume : vivant ou issu du vivant ; caillou : jamais vivant) et tu justifies par la présence ou l'absence de cellules.",
+  },
+};
+
 export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
   // ------------------------- M1 · Mathématiques -------------------------
   m(
@@ -1241,6 +1409,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Les marchands italiens du XIIIe siècle jonglent avec des monnaies et des mesures différentes d'une ville à l'autre. Dans le « Liber Abaci », Fibonacci diffuse la règle de trois et les chiffres indo-arabes qui la rendent praticable.",
     "Dans une situation de proportionnalité, de trois grandeurs connues (a, b, c) on déduit la quatrième : x = b × c / a.",
     'fourth-proportional', 'Quatrième proportionnelle', ['referenceInput', 'referenceOutput', 'targetInput'],
+    PILOT_PROPORTIONALITY,
   ),
   m(
     '1.4', 'Mathématiques', S6,
@@ -1417,6 +1586,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Contre l'« électricité animale » de Galvani, Volta empile des disques de zinc et de cuivre séparés par du drap salé : la pile débite un courant continu stable, sans grenouille.",
     "Empiler des éléments identiques additionne les tensions : tension de la pile = nombre d'éléments × tension par élément.",
     'pile-voltage', 'Tension de la pile (V)', ['cellCount', 'voltagePerCellV'],
+    PILOT_CIRCUIT_PILE,
   ),
   m(
     '2.10', 'Physique', S4,
@@ -1579,6 +1749,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Hooke observe dans le liège des logettes qu'il nomme « cellules » ; Leeuwenhoek découvre les « animalcules ». En 1838-1839, Schleiden et Schwann énoncent que tout être vivant est fait de cellules.",
     "Au microscope, la taille d'une cellule = diamètre du champ observé / nombre de cellules alignées en travers du champ.",
     'cell-size', "Taille d'une cellule (µm)", ['fieldOfViewUm', 'cellsAcrossField'],
+    PILOT_CELL_UNIT,
   ),
   m(
     '4.2', 'SVT', S6,
