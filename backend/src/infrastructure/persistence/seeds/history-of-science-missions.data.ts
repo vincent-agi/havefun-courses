@@ -507,6 +507,885 @@ const PILOT_OUTBREAK: MissionExperiment = {
   },
 };
 
+const PILOT_EARTH_SHADOW: MissionExperiment = {
+  notionKey: 'earth-shadow',
+  guidedExperiment: {
+    title: "Expérience guidée — mesurer la Terre avec deux ombres",
+    goal: "Retrouver la circonférence de la Terre à partir de l'angle d'ombre entre deux villes, comme Ératosthène.",
+    materials: [
+      'Deux gnomons identiques (tiges de 1 m bien verticales, fil à plomb)',
+      'Deux mètres rubans, une craie',
+      "L'heure exacte partagée entre les deux équipes",
+      'La distance nord-sud entre les deux lieux (carte ou GPS)',
+    ],
+    schema: [
+      "   Soleil (rayons paralleles)",
+      "      \\   \\   \\   \\",
+      "  VilleA |        VilleB |__  ombre",
+      "  (pas d'ombre)          | angle a2",
+      "",
+      "   angle du Soleil : tan(a) = longueur ombre / hauteur gnomon",
+      "   a2 - a1 = fraction de tour entre les deux villes",
+      "   circonference = distance x 360 / (a2 - a1)",
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Le même jour, à la même heure (midi solaire local), chaque équipe mesure la longueur de l'ombre de son gnomon.",
+        question: "Les deux gnomons sont-ils bien verticaux, mesurés au fil à plomb ?",
+      },
+      {
+        instruction:
+          "Chaque équipe calcule l'angle du Soleil : tan(angle) = longueur de l'ombre ÷ hauteur du gnomon.",
+        question: "L'angle est-il petit (Soleil haut) ou grand (Soleil bas) à chaque endroit ?",
+      },
+      {
+        instruction:
+          "Fais la différence des deux angles : c'est l'angle au centre de la Terre entre les deux villes.",
+        question: "Pourquoi peut-on dire que cet écart d'angle est une fraction du tour complet (360°) ?",
+      },
+      {
+        instruction:
+          "Mesure la distance nord-sud d entre les deux lieux, puis calcule : circonférence = d × 360 ÷ (écart d'angle).",
+        question: "Ton résultat est-il du bon ordre de grandeur par rapport à 40 000 km ?",
+      },
+    ],
+    measures: [
+      'Longueur de l\'ombre et hauteur du gnomon, aux deux lieux',
+      'Angle du Soleil calculé à chaque lieu, puis leur écart',
+      'Distance nord-sud entre les deux lieux',
+    ],
+    interpretation:
+      "Les rayons du Soleil arrivant parallèles, l'écart entre les deux ombres correspond à l'angle qui sépare les deux villes vues du centre de la Terre. Cet angle est la même fraction de 360° que la distance l'est de la circonférence — d'où C = d × 360 ÷ écart d'angle, la méthode d'Ératosthène.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la circonférence d'une autre planète",
+    brief:
+      "Une sonde voit le Soleil exactement au zénith au-dessus d'un point A. Au même instant, à un point B situé 1000 km au nord sur le même méridien, un gnomon projette une ombre correspondant à un angle de 9°. Calcule la circonférence de cette planète, et explique ce que représente l'angle de 9°.",
+    schema: [
+      '   Soleil au zenith            gnomon a B',
+      '        |                        \\  ombre',
+      '        v                         \\ 9 deg',
+      '   ----A------------ 1000 km ------B----  (meme meridien)',
+      '',
+      '   circonference = 1000 x 360 / 9',
+    ].join('\n'),
+    successCriteria:
+      "Tu trouves une circonférence proche de 40 000 km et tu identifies l'angle de 9° comme la fraction de tour (9/360) qui sépare A et B.",
+  },
+};
+
+const PILOT_AIR_OXYGEN: MissionExperiment = {
+  notionKey: 'air-oxygen-fraction',
+  guidedExperiment: {
+    title: "Expérience guidée — la bougie qui fait monter l'eau",
+    goal: "Mesurer quelle fraction de l'air est consommée par une combustion.",
+    materials: [
+      'Une bougie chauffe-plat sur une soucoupe',
+      "Une cuvette d'eau colorée",
+      'Un bocal transparent gradué (ou repères au feutre)',
+      'Des allumettes',
+    ],
+    schema: [
+      '        ___________            ___________',
+      '       |  bocal    |          |  bocal    |',
+      '       |   (o)     |   -->    |~~~~~~~~~~~|  eau montee ~1/5',
+      '   ~~~~|~~~~~~~~~~~|~~~~   ~~~|___________|~~~~',
+      '     eau  bougie                 bougie eteinte',
+      '',
+      "   fraction de dioxygene = montee d'eau / volume d'air initial",
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Fixe la bougie au fond de la cuvette, verse 2-3 cm d'eau colorée. Allume la bougie et recouvre-la du bocal retourné. Marque le niveau d'eau de départ dans le bocal.",
+        question: "Le bocal repose-t-il bien dans l'eau, sans laisser passer d'air ?",
+      },
+      {
+        instruction:
+          "Observe : la bougie s'éteint, l'eau monte dans le bocal. Marque le niveau final.",
+        question: "La bougie s'éteint-elle AVANT que toute l'eau ne soit montée ?",
+      },
+      {
+        instruction:
+          "Calcule la fraction : hauteur d'eau montée ÷ hauteur d'air au départ.",
+        question: "Pourquoi l'eau ne monte-t-elle que d'environ un cinquième, et pas davantage ?",
+      },
+    ],
+    measures: [
+      "Volume (ou hauteur) d'air dans le bocal au départ",
+      "Volume (ou hauteur) d'eau montée à la fin",
+    ],
+    interpretation:
+      "L'eau monte d'environ 1/5 : seule une partie de l'air, le dioxygène (~21 %), est consommée par la combustion. Le reste (~78 %), le diazote, n'entretient pas la flamme et reste dans le bocal.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la rouille qui consomme l'air",
+    brief:
+      "Sans aucune flamme, place de la paille de fer humidifiée d'eau vinaigrée au fond d'un tube à essai retourné sur de l'eau. Relève la montée d'eau au bout de quelques jours. Quelle fraction de l'air a été consommée, et par quoi ?",
+    schema: [
+      '   |___|  <- eau montee apres quelques jours',
+      '   | Fe|  paille de fer humide qui rouille',
+      '   |   |',
+      '  ~~~~~~~  eau',
+      '',
+      "   fraction consommee = montee d'eau / volume d'air initial",
+    ].join('\n'),
+    successCriteria:
+      "Tu trouves une fraction proche de 1/5 (~21 %) et tu identifies que c'est le fer qui, en rouillant, a fixé le dioxygène de l'air.",
+  },
+};
+
+const PILOT_PLANT_MATTER: MissionExperiment = {
+  notionKey: 'plant-matter-origin',
+  guidedExperiment: {
+    title: "Expérience guidée — la plante grossit, la terre non",
+    goal: "Vérifier que la matière fabriquée par une plante ne vient (presque) pas du sol.",
+    materials: [
+      'Une balance de précision, un pot avec du terreau séché et pesé',
+      'Un jeune plant (haricot ou tournesol)',
+      "De l'eau de pluie mesurée, un film pour couvrir la terre",
+      'Un cahier de suivi (6 à 8 semaines)',
+    ],
+    schema: [
+      '   DEBUT                        FIN (6-8 semaines)',
+      '     |  plant : m_p1              |  plant : m_p2  (bien plus lourd)',
+      '   [====]  terre seche : m_t1   [====]  terre seche : m_t2',
+      '',
+      '   gain plante = m_p2 - m_p1',
+      '   perte terre = m_t1 - m_t2   (tres petite)',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Pèse le plant seul (m_p1) et la terre sèche du pot (m_t1). Note les deux masses.",
+        question: "La terre est-elle bien sèche avant la pesée, pour pouvoir comparer à la fin ?",
+      },
+      {
+        instruction:
+          "Couvre la surface de la terre, n'arrose qu'à l'eau de pluie mesurée, place au soleil. Suis la croissance chaque semaine.",
+        question: "Pourquoi couvrir la terre et n'utiliser que de l'eau de pluie ?",
+      },
+      {
+        instruction:
+          "Après 6 à 8 semaines, sèche séparément la plante et la terre, puis repèse : m_p2 et m_t2.",
+        question: "Le gain de masse de la plante ressemble-t-il à la perte de masse de la terre ?",
+      },
+    ],
+    measures: [
+      'Masse du plant au début (m_p1) et à la fin (m_p2)',
+      'Masse de la terre sèche au début (m_t1) et à la fin (m_t2)',
+    ],
+    interpretation:
+      "La plante gagne beaucoup de masse (des dizaines de grammes) alors que la terre n'en perd presque pas (quelques grammes). La matière végétale ne vient donc pas du sol : c'est le résultat de van Helmont.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la lumière est-elle indispensable ?",
+    brief:
+      "Conçois une comparaison : deux plants identiques, mêmes eau, terre et température, l'un à la lumière, l'autre à l'obscurité. Après quelques semaines, mesure la masse sèche produite par chacun. Conclus sur le rôle de la lumière et sur l'origine de la matière fabriquée.",
+    schema: [
+      '   PLANT LUMIERE        PLANT OBSCURITE',
+      '     (soleil)              (placard)',
+      '   meme eau / terre / temperature',
+      '   masse seche produite : g_L        g_O',
+      '   comparer  g_L  vs  g_O',
+    ].join('\n'),
+    successCriteria:
+      "Le plant éclairé produit nettement plus de matière que celui à l'obscurité, et tu expliques que l'essentiel de cette matière vient de l'air (dioxyde de carbone) et de l'eau, grâce à la lumière.",
+  },
+};
+
+const PILOT_SHADOW_LINE: MissionExperiment = {
+  notionKey: 'shadow-straight-line',
+  guidedExperiment: {
+    title: "Expérience guidée — l'ombre du gnomon, horloge et boussole",
+    goal: "Montrer que la lumière du Soleil va en ligne droite : l'ombre a un bord net et une longueur qui suit une loi régulière.",
+    materials: [
+      'Un gnomon vertical (tige de 1 m, fil à plomb)',
+      'Une craie, un mètre ruban',
+      'Une boussole pour vérifier',
+    ],
+    schema: [
+      '   Soleil                Soleil               Soleil',
+      '     \\                     |                    /',
+      '   ___\\___             ____|____            ___/___',
+      '   ====== ombre longue  == ombre courte  ====== ombre longue',
+      '   matin                  midi (nord)          soir',
+      '',
+      "   bord de l'ombre = net  ->  la lumiere ne contourne pas l'obstacle",
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Plante le gnomon. Toutes les heures, trace le contour de son ombre à la craie et note sa longueur et l'heure.",
+        question: "Le bord de l'ombre est-il net ou flou ?",
+      },
+      {
+        instruction:
+          "Repère l'ombre la plus courte de la journée : c'est le midi solaire. Sa direction donne l'axe nord-sud.",
+        question: "L'ombre la plus courte pointe-t-elle vers le nord (vérifie à la boussole) ?",
+      },
+      {
+        instruction:
+          "Interpose ta main entre le Soleil et le sol : observe le bord de l'ombre portée.",
+        question: "Si la lumière contournait les obstacles, l'ombre aurait-elle un bord aussi net ?",
+      },
+    ],
+    measures: [
+      "Longueur et heure de l'ombre, matin / midi / soir (au moins 3 relevés)",
+      "Direction de l'ombre la plus courte, comparée au nord de la boussole",
+    ],
+    interpretation:
+      "L'ombre a un bord net et sa longueur passe par un minimum à midi : la lumière se propage en ligne droite. C'est ce qui rend l'ombre du gnomon utilisable comme horloge et comme boussole.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — fabriquer un cadran solaire",
+    brief:
+      "Construis un cadran solaire horizontal : oriente le style vers le nord, puis trace les lignes horaires en relevant la position de l'ombre à des heures connues. Le lendemain, vérifie que le cadran donne l'heure solaire.",
+    schema: [
+      '        12',
+      '    11  |  13',
+      '   10 \\ | / 14      style oriente vers le NORD',
+      '  9 ---(o)--- 15     lignes horaires = positions de l\'ombre',
+      '',
+      "   verifier le lendemain : heure lue  vs  heure reelle",
+    ].join('\n'),
+    successCriteria:
+      "Ton cadran donne l'heure solaire à moins de 20 minutes près, et tu expliques qu'il fonctionne parce que l'ombre du style a une direction précise (lumière en ligne droite).",
+  },
+};
+
+const PILOT_MELTING_PLATEAU: MissionExperiment = {
+  notionKey: 'melting-plateau',
+  guidedExperiment: {
+    title: "Expérience guidée — la température qui reste bloquée",
+    goal: "Montrer qu'un corps pur change d'état à température fixe (palier).",
+    materials: [
+      'De la glace pilée dans un bécher',
+      'Un thermomètre (−10 à +110 °C), un chronomètre',
+      'Une source de chaleur douce (bain d\'eau chaude ou réchaud surveillé)',
+    ],
+    schema: [
+      '   T (deg C)',
+      '   100 |            _____ palier d\'ebullition',
+      '       |           /',
+      '     0 |__________/   <- palier de fusion (glace + eau)',
+      '       |_____________________  temps',
+      '       glace   fonte    eau qui chauffe',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Plonge le thermomètre dans la glace pilée et relève la température de départ.",
+        question: "Y a-t-il encore de la glace ET de l'eau dans le bécher ?",
+      },
+      {
+        instruction:
+          "Chauffe doucement et relève la température toutes les minutes, en notant l'aspect (glace + eau, puis eau seule).",
+        question: "Pendant que la glace fond, le thermomètre monte-t-il ? Où va la chaleur apportée ?",
+      },
+      {
+        instruction:
+          "Continue jusqu'à ce que toute la glace ait fondu, puis relève la température.",
+        question: "La température ne remonte-t-elle qu'une fois toute la glace fondue ?",
+      },
+    ],
+    measures: [
+      "Température au début (glace + eau)",
+      "Température après quelques minutes (glace + eau encore présentes)",
+      "Température quand toute la glace a fondu",
+    ],
+    interpretation:
+      "Tant que glace et eau coexistent, la température reste bloquée vers 0 °C : la chaleur apportée sert à faire fondre la glace, pas à chauffer. C'est la chaleur latente de Joseph Black.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la courbe de refroidissement d'un corps pur",
+    brief:
+      "Fais fondre un peu de paraffine (ou d'acide stéarique), puis laisse-la refroidir à l'air en relevant sa température. Repère le palier de solidification et déduis-en la température caractéristique de ce corps.",
+    schema: [
+      '   T (deg C)',
+      '       |\\',
+      '       | \\____ palier de solidification',
+      '       |      \\____  (temperature caracteristique)',
+      '       |___________\\____  temps',
+      '       liquide  fige    solide qui refroidit',
+    ].join('\n'),
+    successCriteria:
+      "Tu repères un palier (deux relevés stables) pendant la solidification et tu en déduis la température caractéristique du corps, en expliquant qu'il libère alors de la chaleur.",
+  },
+};
+
+const PILOT_MENDEL: MissionExperiment = {
+  notionKey: 'mendel-ratio',
+  guidedExperiment: {
+    title: "Expérience guidée — compter la descendance",
+    goal: "Retrouver le rapport 3 pour 1 dans la descendance d'un croisement.",
+    materials: [
+      "Plusieurs épis de maïs pédagogique (grains colorés / clairs) OU des lots de graines issus d'un croisement connu",
+      'Une fiche de comptage, une calculatrice',
+    ],
+    schema: [
+      '   epi 1 : [X X . X X . X X X X . X]   dominant X  /  recessif .',
+      '   epi 2 : [. X X X X . X X . X X X]',
+      '   epi 3 : [X X X . X X X . X X . X]',
+      '',
+      '   rapport = total dominant / total recessif   ->  proche de 3',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Sur chaque épi (ou lot), compte les grains de chaque type : forme dominante et forme récessive.",
+        question: "Le rapport sur un seul épi est-il déjà proche de 3, ou faut-il en cumuler plusieurs ?",
+      },
+      {
+        instruction:
+          "Additionne les comptes de tous les épis, puis calcule : total dominant ÷ total récessif.",
+        question: "Ton rapport global se rapproche-t-il de 3 quand tu comptes plus de grains ?",
+      },
+      {
+        instruction:
+          "Compare ton rapport à la valeur 3 attendue quand un caractère dominant masque un caractère récessif.",
+        question: "Pourquoi la forme récessive réapparaît-elle alors qu'elle avait « disparu » à la génération précédente ?",
+      },
+    ],
+    measures: [
+      "Pour chaque épi : nombre de grains dominants et récessifs",
+      "Totaux cumulés et rapport dominant / récessif",
+    ],
+    interpretation:
+      "Sur un grand nombre de grains, le rapport se rapproche de 3 pour 1 : chaque caractère est porté par des facteurs hérités par paires, un de chaque parent, et le facteur dominant masque le récessif sans le supprimer.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — un caractère variable dans la nature",
+    brief:
+      "Choisis un caractère à deux versions sur une plante commune (par exemple trèfle à folioles marquées ou non, pâquerette à ligules blanches ou rosées). Échantillonne au moins 100 individus, compte les deux formes, calcule les proportions et dis si le résultat est compatible avec un caractère à deux versions.",
+    schema: [
+      '   population echantillonnee (>= 100 individus)',
+      '   forme A : n_A        forme B : n_B',
+      '   proportion A = n_A / (n_A + n_B)',
+      '   -> une forme peut etre plus frequente que l\'autre',
+    ].join('\n'),
+    successCriteria:
+      "Tu comptes au moins 100 individus, tu donnes les proportions des deux formes, et tu conclus qu'un caractère à deux versions (dont l'une peut dominer ou être plus répandue) est compatible avec l'hérédité.",
+  },
+};
+
+const PILOT_PYTHAGORAS: MissionExperiment = {
+  notionKey: 'pythagoras-3-4-5',
+  guidedExperiment: {
+    title: "Expérience guidée — les carrés sur les côtés du triangle rectangle",
+    goal: "Vérifier que, dans un triangle rectangle, le carré de l'hypoténuse est la somme des carrés des deux autres côtés.",
+    materials: [
+      'Un décamètre, un cordeau, des piquets, une craie',
+      "Une équerre ou une corde à 13 nœuds pour l'angle droit",
+      'De quoi tracer et quadriller des carrés au sol (carreaux de 50 cm)',
+    ],
+    schema: [
+      '            +--------+',
+      '            |  c x c |  carre sur l\'hypotenuse',
+      '   +----+   |        |',
+      '   |b x b|  *---------  hypotenuse c',
+      '   +----+ / |',
+      '   |     / a| triangle rectangle (a et b : cotes de l\'angle droit)',
+      '   +----+   +----+',
+      '   a x a    ...',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Trace au sol un triangle rectangle de côtés 3 m et 4 m (angle droit vérifié à l'équerre ou à la corde à 13 nœuds). Mesure l'hypoténuse.",
+        question: "Combien mesure l'hypoténuse que tu as tracée ?",
+      },
+      {
+        instruction:
+          "Sur chaque côté, trace le carré correspondant. Recouvre les deux petits carrés de carreaux de 50 cm et compte-les.",
+        question: "Combien de carreaux dans le carré de 3 m ? dans celui de 4 m ?",
+      },
+      {
+        instruction:
+          "Compte les carreaux du grand carré (sur l'hypoténuse). Compare à la somme des deux autres.",
+        question: "Le grand carré contient-il exactement autant de carreaux que les deux petits réunis ?",
+      },
+    ],
+    measures: [
+      'Longueurs des deux côtés de l\'angle droit (a et b)',
+      'Longueur mesurée de l\'hypoténuse (c)',
+    ],
+    interpretation:
+      "L'aire du carré sur l'hypoténuse est égale à la somme des aires des deux autres carrés : c'est a² + b² = c². La mesure directe de l'hypoténuse confirme le calcul.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — le mur est-il bien d'aplomb ?",
+    brief:
+      "Un maçon veut vérifier qu'un mur est perpendiculaire au sol sans monter d'échafaudage. Il mesure 0,60 m le long du sol, 0,80 m le long du mur, et 1,00 m en diagonale entre ces deux repères. En n'utilisant que ces trois longueurs, dis si l'angle mur/sol est droit.",
+    schema: [
+      '   mur |',
+      '       |\\',
+      '  0,80 | \\  1,00  (diagonale)',
+      '       |  \\',
+      '       +---\\----  sol',
+      '        0,60',
+      '   angle droit  <=>  0,60^2 + 0,80^2 = 1,00^2 ?',
+    ].join('\n'),
+    successCriteria:
+      "Tu calcules 0,60² + 0,80² et tu le compares à 1,00², puis tu conclus correctement que l'angle est droit (réciproque du théorème de Pythagore).",
+  },
+};
+
+const PILOT_CO2_LIMEWATER: MissionExperiment = {
+  notionKey: 'co2-limewater',
+  guidedExperiment: {
+    title: "Expérience guidée — l'eau de chaux qui se trouble",
+    goal: "Identifier le dioxyde de carbone grâce à un test reproductible : le trouble de l'eau de chaux.",
+    materials: [
+      "De l'eau de chaux limpide (préparée et filtrée)",
+      'Trois pots transparents, une paille',
+      'Du vinaigre et du bicarbonate de soude',
+    ],
+    schema: [
+      '   Pot 1            Pot 2                 Pot 3 (temoin)',
+      '   souffle a la     gaz du vinaigre       air ambiant',
+      '   paille           + bicarbonate         (on agite)',
+      '   -> trouble ?     -> trouble ?          -> trouble ?',
+      '',
+      '   trouble blanc  =  presence de dioxyde de carbone',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Verse un fond d'eau de chaux dans les trois pots.",
+        question: "L'eau de chaux est-elle bien limpide au départ dans les trois pots ?",
+      },
+      {
+        instruction:
+          "Pot 1 : souffle doucement à la paille pendant 30 s. Pot 2 : fais réagir vinaigre + bicarbonate dans un verre voisin et transvase le gaz dans le pot. Pot 3 : agite simplement à l'air.",
+        question: "Quels pots se troublent, et lequel reste limpide ?",
+      },
+      {
+        instruction:
+          "Compare : qu'ont en commun les sources qui font se troubler l'eau de chaux ?",
+        question: "Le gaz de ton souffle et le gaz du vinaigre + bicarbonate sont-ils le même gaz ?",
+      },
+    ],
+    measures: [
+      "Aspect de l'eau de chaux dans chaque pot (trouble / limpide)",
+      "Délai d'apparition du trouble",
+    ],
+    interpretation:
+      "L'eau de chaux se trouble avec l'air expiré et avec le gaz du vinaigre + bicarbonate, mais pas dans le témoin : ces sources dégagent toutes le même gaz, le dioxyde de carbone. Le trouble est son test d'identification.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — qui produit du dioxyde de carbone ?",
+    brief:
+      "À l'aide de l'eau de chaux, détermine si du dioxyde de carbone est produit par : la combustion d'une bougie, la fermentation d'un jus sucré avec de la levure, et la respiration de graines de lentilles en germination. Conçois le montage pour chaque cas et conclus.",
+    schema: [
+      '   bougie qui brule  |  jus sucre + levure  |  graines qui germent',
+      '   (cloche)           |  (bouteille fermee)   |  (bocal ferme)',
+      '        \\             |         |             |        /',
+      '         ---> eau de chaux : trouble ou limpide ? <---',
+    ].join('\n'),
+    successCriteria:
+      "Tu observes que l'eau de chaux se trouble dans les trois cas, et tu conclus que combustion, fermentation et respiration produisent toutes du dioxyde de carbone.",
+  },
+};
+
+const PILOT_EARTHWORM: MissionExperiment = {
+  notionKey: 'earthworm-burial',
+  guidedExperiment: {
+    title: "Expérience guidée — les vers enfouissent la litière",
+    goal: "Mesurer que la faune du sol (les vers) enfouit les feuilles mortes et fabrique l'humus.",
+    materials: [
+      "Des dalles plates (ou ardoises) posées à plat, des piquets repères",
+      "Des sachets à mailles fines et à grosses mailles, des feuilles mortes pesées",
+      'Une balance, une règle, un carnet de suivi (plusieurs semaines)',
+    ],
+    schema: [
+      '   dalle temoin :  niveau initial  ----  ->  s\'enfonce peu a peu',
+      '',
+      '   sachet mailles FINES   : vers exclus  -> feuilles peu decomposees',
+      '   sachet GROSSES mailles : faune entre  -> feuilles bien decomposees',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Pose des dalles à plat sur la pelouse contre des piquets repères. Note leur niveau. Laisse en place plusieurs semaines, puis remesure l'enfoncement.",
+        question: "La dalle s'est-elle enfoncée ? D'où vient la terre qui la recouvre ?",
+      },
+      {
+        instruction:
+          "Enferme des masses égales de feuilles mortes dans un sachet à mailles fines (sans vers) et un à grosses mailles (avec la faune). Enterre-les, puis déterre et repèse après 6 à 10 semaines.",
+        question: "Dans quel sachet reste-t-il le moins de feuilles ?",
+      },
+      {
+        instruction:
+          "Compare l'état des feuilles des deux sachets et repère, à la surface, les petits tortillons de terre (turricules) laissés par les vers.",
+        question: "Les feuilles du sachet à grosses mailles sont-elles plus fragmentées, plus mélangées à la terre ?",
+      },
+    ],
+    measures: [
+      "Enfoncement de la dalle témoin et durée du suivi",
+      "Masse de feuilles restante : sachet mailles fines / sachet grosses mailles",
+    ],
+    interpretation:
+      "Les feuilles disparaissent bien plus vite quand la faune du sol peut y accéder ; les vers mélangent les horizons et enfouissent la litière, qu'ils transforment en humus. C'est ce que Darwin a mesuré pendant quarante ans.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — que sait recycler la faune du sol ?",
+    brief:
+      "Compare la vitesse de décomposition de trois déchets déposés dans des sachets à grosses mailles enterrés côte à côte : une feuille, un morceau de pain, un morceau de plastique fin. Sur une durée que tu fixes, mesure la part de masse perdue par chacun et conclus.",
+    schema: [
+      '   feuille        pain          plastique fin',
+      '   masse perdue : %F           %P            %plast',
+      '',
+      '   la faune du sol recycle la matiere organique, pas le plastique',
+    ].join('\n'),
+    successCriteria:
+      "La feuille et le pain perdent une part importante de leur masse, le plastique presque rien, et tu conclus que la faune du sol recycle la matière organique mais pas le plastique.",
+  },
+};
+
+const PILOT_DISK_AREA: MissionExperiment = {
+  notionKey: 'disk-area-exhaustion',
+  guidedExperiment: {
+    title: "Expérience guidée — encadrer l'aire d'un disque",
+    goal: "Encadrer l'aire d'un disque entre une valeur par défaut et une valeur par excès, comme la méthode d'exhaustion d'Archimède.",
+    materials: [
+      'Un cordeau et un piquet, de la craie',
+      'Un grand quadrillage tracé au sol (carreaux de 20 cm)',
+      'Une calculatrice',
+    ],
+    schema: [
+      '   +--+--+--+--+--+',
+      '   |  |##|##|##|  |   ## = carreau entierement dedans (par defaut)',
+      '   +--+##+##+##+--+   oo = carreau touche par le cercle (par exces)',
+      '   |##|##|##|##|##|',
+      '   +oo+##+##+##+oo+',
+      '   aire du disque  ENTRE  (nb ##)xaire  et  (nb ## + oo)xaire',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Trace au cordeau un cercle de rayon 1 m sur le quadrillage. Compte les carreaux entièrement à l'intérieur du cercle.",
+        question: "Cette somme d'aires est-elle plus petite ou plus grande que l'aire du disque ?",
+      },
+      {
+        instruction:
+          "Compte maintenant tous les carreaux qui touchent le cercle ou sont dedans. Cette somme est la valeur par excès.",
+        question: "L'aire du disque est-elle forcément comprise entre tes deux valeurs ?",
+      },
+      {
+        instruction:
+          "Calcule l'aire par défaut et l'aire par excès (nombre de carreaux × aire d'un carreau), puis compare l'intervalle à π × R² = π × 1² ≈ 3,14 m².",
+        question: "Si tu prenais des carreaux plus petits, l'encadrement se resserrerait-il autour de 3,14 ?",
+      },
+    ],
+    measures: [
+      "Aire d'un carreau (m²)",
+      'Nombre de carreaux entièrement dans le cercle',
+      'Nombre de carreaux touchés ou dans le cercle',
+    ],
+    interpretation:
+      "L'aire du disque est coincée entre les deux valeurs, et l'intervalle contient 3,14 m² (π × R²). En prenant des carreaux de plus en plus petits, on « épuise » l'écart, exactement comme Archimède avec ses polygones.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — l'aire d'une flaque",
+    brief:
+      "Estime l'aire d'une flaque, d'un massif ou d'une tache d'herbe de forme quelconque, uniquement en l'encadrant par des rectangles tracés à la craie : donne une valeur par défaut (rectangles entièrement dedans) et une valeur par excès (rectangles qui la contiennent).",
+    schema: [
+      '   +-----------+   rectangles PAR EXCES (contiennent la flaque)',
+      '   | +-------+ |',
+      '   | | ~~~~~ | |   rectangles PAR DEFAUT (a l\'interieur)',
+      '   | +-------+ |',
+      '   +-----------+',
+      '   aire  ENTRE  somme(defaut)  et  somme(exces)',
+    ].join('\n'),
+    successCriteria:
+      "Ta valeur par défaut est inférieure à ta valeur par excès, l'écart entre les deux reste raisonnable, et tu expliques qu'on ne peut donner qu'un encadrement car le bord est courbe.",
+  },
+};
+
+const PILOT_WEIGHT_MASS: MissionExperiment = {
+  notionKey: 'weight-vs-mass',
+  guidedExperiment: {
+    title: "Expérience guidée — la balance et le dynamomètre",
+    goal: "Distinguer la masse (propre à la matière) du poids (force qui dépend du lieu).",
+    materials: [
+      'Une balance, un dynamomètre (peson) gradué en newtons',
+      'Plusieurs objets : galet, brique, bouteille d\'eau',
+      'Une corde, une potence ou une branche solide',
+    ],
+    schema: [
+      '   BALANCE                 DYNAMOMETRE',
+      '   [====]                    | ressort',
+      '    || m (kg)                O <- crochet',
+      '                             | objet',
+      '   masse : quantite de       poids : force (N)',
+      '   matiere, invariable       P = m x g',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Pèse chaque objet à la balance : tu lis sa masse en kilogrammes.",
+        question: "La balance est-elle bien à zéro avant de poser l'objet ?",
+      },
+      {
+        instruction:
+          "Suspends chaque objet au dynamomètre : tu lis son poids en newtons.",
+        question: "Le poids en newtons est-il un nombre différent de la masse en kilogrammes ?",
+      },
+      {
+        instruction:
+          "Pour chaque objet, calcule le quotient poids ÷ masse. Compare les résultats.",
+        question: "Le quotient poids ÷ masse est-il le même pour tous les objets ?",
+      },
+    ],
+    measures: [
+      'Masse (kg) et poids (N) de chaque objet',
+      'Quotient poids ÷ masse pour chacun',
+    ],
+    interpretation:
+      "Le quotient poids ÷ masse est le même pour tous les objets, environ 9,8 N/kg : c'est l'intensité de la pesanteur g. La balance mesure une grandeur invariable (la masse) ; le dynamomètre mesure une force qui dépend de l'astre.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — le même sac sur trois astres",
+    brief:
+      "Tu pèses un sac : sa masse est de 5 kg. On te donne l'intensité de la pesanteur sur la Terre (9,8 N/kg), sur la Lune (1,6) et sur Mars (3,7). Prévois par le calcul le poids qu'indiquerait un dynamomètre pour ce sac sur chacun des trois astres.",
+    schema: [
+      '   masse du sac : 5 kg  (identique partout)',
+      '',
+      '   Terre : P = 5 x 9,8 = ?   N',
+      '   Lune  : P = 5 x 1,6 = ?   N',
+      '   Mars  : P = 5 x 3,7 = ?   N',
+    ].join('\n'),
+    successCriteria:
+      "Tes trois poids valent bien masse × g pour chaque astre, et tu identifies que c'est le poids qui change d'un astre à l'autre, pas la masse.",
+  },
+};
+
+const PILOT_RESPIRATION: MissionExperiment = {
+  notionKey: 'respiration-co2',
+  guidedExperiment: {
+    title: "Expérience guidée — l'air expiré trouble l'eau de chaux",
+    goal: "Montrer que la respiration rejette du dioxyde de carbone, et que l'effort l'intensifie.",
+    materials: [
+      "De l'eau de chaux limpide, des pailles, des gobelets, un chronomètre",
+      'Une seringue (pour l\'air ambiant témoin)',
+      'De quoi faire un effort (montée de marches, course courte)',
+    ],
+    schema: [
+      '   gobelet 1 : air expire     gobelet 2 : air ambiant (temoin)',
+      '   souffle a la paille        chasse a la seringue',
+      '   -> se trouble en t1 s      -> se trouble en t2 s (bien plus long)',
+      '',
+      '   au repos  vs  apres effort : compter les respirations / min',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Au repos, souffle à la paille dans un gobelet d'eau de chaux et chronomètre le temps au bout duquel elle se trouble. Fais de même avec de l'air ambiant chassé à la seringue dans un autre gobelet.",
+        question: "L'air expiré trouble-t-il l'eau de chaux beaucoup plus vite que l'air ambiant ?",
+      },
+      {
+        instruction:
+          "Toujours au repos, compte le nombre de respirations par minute.",
+        question: "Ta respiration est-elle lente et régulière au repos ?",
+      },
+      {
+        instruction:
+          "Fais un effort d'une à deux minutes, puis refais aussitôt les mesures : temps de trouble de l'eau de chaux et nombre de respirations par minute.",
+        question: "L'effort augmente-t-il la fréquence des respirations et le rejet de dioxyde de carbone ?",
+      },
+    ],
+    measures: [
+      "Temps de trouble de l'eau de chaux : air expiré (repos) et air ambiant (témoin)",
+      'Fréquence respiratoire au repos, puis après effort',
+    ],
+    interpretation:
+      "L'air expiré trouble l'eau de chaux bien plus vite que l'air ambiant : il est enrichi en dioxyde de carbone. À l'effort, on respire plus souvent et le rejet de dioxyde de carbone augmente : la respiration est une combustion lente qui s'intensifie avec l'activité, comme l'ont montré Lavoisier et Séguin.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — effort et consommation de l'organisme",
+    brief:
+      "Définis trois niveaux d'effort (marche, marche rapide, course). Pour chacun, après stabilisation, mesure la fréquence respiratoire ET la fréquence cardiaque. Trace les deux séries en fonction de l'effort et conclus sur le lien entre intensité de l'effort et consommation de l'organisme.",
+    schema: [
+      '   effort :   marche   marche rapide   course',
+      '   respi/min :  r1   <    r2       <    r3',
+      '   coeur/min :  c1   <    c2       <    c3',
+      '   -> plus l\'effort est intense, plus l\'organisme consomme',
+    ].join('\n'),
+    successCriteria:
+      "Tes deux séries (respiration et fréquence cardiaque) augmentent avec l'intensité de l'effort, et tu conclus que l'organisme consomme et rejette d'autant plus que l'effort est intense.",
+  },
+};
+
+const PILOT_PROPORTIONALITY: MissionExperiment = {
+  notionKey: 'proportionality-rule-of-three',
+  guidedExperiment: {
+    title: "Expérience guidée — le prix qui suit la masse",
+    goal: "Vérifier qu'un prix est proportionnel à la masse, et retrouver la quatrième grandeur par la règle de trois.",
+    materials: [
+      'Une balance de cuisine, une calculatrice, un carnet',
+      "Des lots de fruits ou légumes (ou sachets de sable étiquetés)",
+      "Des étiquettes de prix « au kilo »",
+    ],
+    schema: [
+      "   prix au kilo : p  (EUR/kg)",
+      '   portion pesee : m (g)',
+      '',
+      "   prix de la portion = p / 1000 x m   (passage a l'unite)",
+      '   portion doublee -> prix double ;  triplee -> prix triple',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Relève le prix au kilo d'un produit, puis pèse une portion réelle de ce produit.",
+        question: "Quelle est la masse de ta portion, et le prix affiché au kilo ?",
+      },
+      {
+        instruction:
+          "Calcule le prix de ta portion : prix au kilo ÷ 1000 × masse en grammes.",
+        question: "Ton résultat est-il cohérent avec ce que tu paierais en caisse ?",
+      },
+      {
+        instruction:
+          "Double puis triple la portion, et calcule à chaque fois le prix. Compare au prix de la portion simple.",
+        question: "Quand tu doubles la masse, le prix double-t-il exactement ?",
+      },
+    ],
+    measures: [
+      "Prix au kilo (EUR/kg) et masse de la portion (g)",
+      "Prix calculé pour la portion simple, la portion double, la portion triple",
+    ],
+    interpretation:
+      "Le prix est proportionnel à la masse : le coefficient est le prix au gramme. Doubler la masse double le prix, la tripler le triple. C'est la règle de trois diffusée par Fibonacci.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la carte à l'échelle 1/2000",
+    brief:
+      "On te remet un plan du quartier à l'échelle 1/2000. Un trajet y mesure une certaine longueur (en cm sur le plan). Prévois la longueur réelle du trajet, puis vérifie en le mesurant au décamètre sur le terrain.",
+    schema: [
+      '   echelle 1/2000  :  1 cm sur le plan  =  2000 cm en realite',
+      '',
+      '   longueur sur le plan : L_plan (cm)',
+      '   longueur reelle prevue = L_plan x 2000  (en cm)  = L_plan x 20 (en m)',
+    ].join('\n'),
+    successCriteria:
+      "Ta longueur réelle prévue vaut bien la longueur sur le plan × 2000 (soit × 20 pour l'avoir en mètres), et ta mesure au décamètre la confirme à moins de 10 % près.",
+  },
+};
+
+const PILOT_CIRCUIT_PILE: MissionExperiment = {
+  notionKey: 'circuit-pile',
+  guidedExperiment: {
+    title: "Expérience guidée — empiler pour faire une pile",
+    goal: "Voir qu'un générateur et une boucle fermée de conducteurs suffisent à faire circuler un courant, et qu'empiler des éléments augmente la tension.",
+    materials: [
+      'Des pièces en cuivre, des rondelles de zinc, du papier absorbant',
+      'Du vinaigre salé, des fils à pinces crocodiles',
+      'Une DEL (ou un petit moteur), un multimètre',
+    ],
+    schema: [
+      '   cuivre  |###|  }',
+      '   papier  |~~~|  }  1 element',
+      '   zinc    |###|  }',
+      '   ... on empile plusieurs elements ...',
+      '',
+      '   tension de la pile mesuree au multimetre : croit avec le nombre d\'elements',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Empile cuivre / papier imbibé de vinaigre salé / zinc, plusieurs fois. Mesure la tension aux extrémités au multimètre pour 1, puis 3, puis 6 étages.",
+        question: "La tension augmente-t-elle avec le nombre d'étages ?",
+      },
+      {
+        instruction:
+          "Relie la pile à une DEL par des fils (respecte le sens). Insère un interrupteur bricolé et ouvre / ferme le circuit.",
+        question: "La DEL s'allume-t-elle quand le circuit est ouvert ?",
+      },
+      {
+        instruction:
+          "Identifie la boucle du circuit. Coupe un fil : que se passe-t-il ?",
+        question: "Faut-il une boucle complète de conducteurs pour que le courant passe ?",
+      },
+    ],
+    measures: [
+      "Tension de la pile pour 1, 3 et 6 étages",
+      "État de la DEL selon circuit ouvert / fermé",
+    ],
+    interpretation:
+      "Un générateur, une boucle fermée de conducteurs et un récepteur suffisent à faire circuler un courant. Plus on empile d'éléments, plus la tension est grande : c'est la pile de Volta reconstituée.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la pile aux fruits",
+    brief:
+      "À partir de fruits (citrons, pommes de terre), de clous galvanisés (zinc) et de pièces de cuivre, monte une pile capable d'allumer une DEL. Détermine combien d'éléments il faut mettre en série, puis repère sur ton schéma le sens conventionnel du courant.",
+    schema: [
+      '   [citron]--Cu   Zn--[citron]--Cu   Zn--[citron]--Cu   ... --> DEL',
+      '',
+      "   tension d'un element : ~0,7 a 1 V",
+      '   sens conventionnel : de la borne + vers la borne - a l\'exterieur du generateur',
+    ].join('\n'),
+    successCriteria:
+      "Tu mets assez d'éléments en série pour dépasser environ 1,8 V (nécessaire à une DEL rouge), et tu indiques que le sens conventionnel du courant va de la borne + vers la borne − à l'extérieur du générateur.",
+  },
+};
+
+const PILOT_CELL_UNIT: MissionExperiment = {
+  notionKey: 'cell-unit',
+  guidedExperiment: {
+    title: "Expérience guidée — chercher la cellule partout",
+    goal: "Vérifier que tous les êtres vivants sont faits de cellules, contrairement à la matière non vivante.",
+    materials: [
+      'Un microscope (ou loupe numérique), des lames et lamelles, des pipettes',
+      "De l'eau de mare, un oignon, un rameau d'élodée ou de mousse",
+      'Un cure-dent, du bleu de méthylène très dilué',
+    ],
+    schema: [
+      '   oignon (epiderme)   elodee (feuille)   joue (frottis)   eau de mare',
+      '        [ ][ ][ ]          [ ][ ][ ]         o  o  o          ~ o ~ o ~',
+      '   -> cellules              -> cellules       -> cellules      -> micro-organismes',
+      '',
+      '   grain de sable / cristal de sel  ->  PAS de cellules',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Prépare une lame d'épiderme d'oignon, une de feuille d'élodée, une goutte d'eau de mare, et un frottis de joue prélevé au cure-dent.",
+        question: "Les préparations sont-elles assez fines pour laisser passer la lumière ?",
+      },
+      {
+        instruction:
+          "Observe chaque préparation du plus faible au plus fort grossissement, et dessine ce que tu vois.",
+        question: "Retrouves-tu une organisation en petites unités (des cellules) dans chaque échantillon vivant ?",
+      },
+      {
+        instruction:
+          "Observe aussi un grain de sable et un cristal de sel, puis trie toutes les préparations : « on y voit des cellules » ou « on n'y voit pas de cellules ».",
+        question: "Le sable et le sel contiennent-ils des cellules ?",
+      },
+    ],
+    measures: [
+      "Pour chaque préparation : présence ou non de cellules, et leur disposition",
+      "Présence éventuelle de micro-organismes mobiles dans l'eau de mare",
+    ],
+    interpretation:
+      "Oignon, élodée, joue et micro-organismes de la mare montrent tous des cellules, alors que le sable ou le sel n'en ont pas. La cellule est l'unité commune du vivant, comme l'ont établi Hooke, Leeuwenhoek puis Schleiden et Schwann.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — vivant ou non ?",
+    brief:
+      "Rapporte trois échantillons de la cour : de la mousse, une plume, un caillou. Pour chacun, prépare et observe, puis détermine s'il s'agit de matière vivante (ou issue du vivant) ou de matière qui n'a jamais été vivante, en te fondant uniquement sur la présence de cellules.",
+    schema: [
+      '   mousse   ->  cellules  ->  vivant',
+      '   plume    ->  structure cellulaire (kératine)  ->  issu du vivant',
+      '   caillou  ->  pas de cellules  ->  jamais vivant',
+    ].join('\n'),
+    successCriteria:
+      "Tu classes correctement les trois échantillons (mousse et plume : vivant ou issu du vivant ; caillou : jamais vivant) et tu justifies par la présence ou l'absence de cellules.",
+  },
+};
+
 export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
   // ------------------------- M1 · Mathématiques -------------------------
   m(
@@ -530,6 +1409,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Les marchands italiens du XIIIe siècle jonglent avec des monnaies et des mesures différentes d'une ville à l'autre. Dans le « Liber Abaci », Fibonacci diffuse la règle de trois et les chiffres indo-arabes qui la rendent praticable.",
     "Dans une situation de proportionnalité, de trois grandeurs connues (a, b, c) on déduit la quatrième : x = b × c / a.",
     'fourth-proportional', 'Quatrième proportionnelle', ['referenceInput', 'referenceOutput', 'targetInput'],
+    PILOT_PROPORTIONALITY,
   ),
   m(
     '1.4', 'Mathématiques', S6,
@@ -551,6 +1431,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "On ne sait longtemps mesurer que des polygones. Archimède, puis Liu Hui en Chine, encadrent le disque entre polygones inscrit et circonscrit en multipliant les côtés jusqu'à rendre l'écart négligeable.",
     "L'aire du disque vaut A = π × R². On l'encadre par des polygones dont on sait calculer l'aire, de plus en plus proches du cercle.",
     'disk-area', 'Aire du disque (m²)', ['radiusM'],
+    PILOT_DISK_AREA,
   ),
   m(
     '1.7', 'Mathématiques', S5,
@@ -572,6 +1453,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Le jour du solstice, le Soleil éclaire le fond des puits à Syène tandis qu'un gnomon projette une ombre à Alexandrie. Ératosthène mesure l'angle (≈ 7,2°, soit 1/50 de tour) et en déduit la circonférence terrestre.",
     "Les rayons du Soleil arrivant parallèles, l'angle d'ombre entre deux villes d'un même méridien est la fraction de tour qui sépare leurs verticales : circonférence = distance × 360 / angle.",
     'earth-circumference', 'Circonférence terrestre (km)', ['shadowAngleDeg', 'distanceKm'],
+    PILOT_EARTH_SHADOW,
   ),
   m(
     '1.10', 'Mathématiques', S5,
@@ -586,6 +1468,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "La tablette babylonienne Plimpton 322 (v. 1800 av. J.-C.) aligne déjà des triplets vérifiant a² + b² = c². C'est l'école de Pythagore, à Crotone, à qui l'on attribue la première démonstration générale.",
     "Dans un triangle rectangle, l'hypoténuse se calcule à partir des deux côtés de l'angle droit : c = √(a² + b²).",
     'pythagorean-hypotenuse', "Longueur de l'hypoténuse (m)", ['legAM', 'legBM'],
+    PILOT_PYTHAGORAS,
   ),
   m(
     '1.12', 'Mathématiques', S4,
@@ -658,6 +1541,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Newton unifie la chute d'une pomme et le mouvement de la Lune dans une même force, la gravitation universelle. Elle explique pourquoi un corps « pèse » moins en altitude ou sur la Lune.",
     "La masse (kg) est propre à la matière ; le poids (N) dépend de l'astre : P = m × g, où g est l'intensité de la pesanteur du lieu.",
     'weight-from-mass', 'Poids (N)', ['massKg', 'gravityNPerKg'],
+    PILOT_WEIGHT_MASS,
   ),
   m(
     '2.4', 'Physique', S6,
@@ -680,6 +1564,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "En suivant l'ombre d'une tige verticale au fil du jour, les savants de Milet repèrent le midi, le nord et les solstices : c'est, selon le programme, « la première loi scientifique connue de l'Humanité ».",
     "La lumière se propageant en ligne droite, l'ombre a un bord net et une longueur calculable : hauteur du Soleil = arctan(hauteur du gnomon / longueur de l'ombre).",
     'sun-elevation-from-shadow', 'Hauteur du Soleil (°)', ['gnomonHeightM', 'shadowLengthM'],
+    PILOT_SHADOW_LINE,
   ),
   m(
     '2.7', 'Physique', S5,
@@ -701,6 +1586,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Contre l'« électricité animale » de Galvani, Volta empile des disques de zinc et de cuivre séparés par du drap salé : la pile débite un courant continu stable, sans grenouille.",
     "Empiler des éléments identiques additionne les tensions : tension de la pile = nombre d'éléments × tension par élément.",
     'pile-voltage', 'Tension de la pile (V)', ['cellCount', 'voltagePerCellV'],
+    PILOT_CIRCUIT_PILE,
   ),
   m(
     '2.10', 'Physique', S4,
@@ -759,6 +1645,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Black constate qu'un mélange de glace et d'eau reste bloqué à 0 °C tant qu'il fond, même chauffé : la chaleur apportée est « latente », elle sert à changer l'état.",
     "En mélangeant deux masses d'eau, la température d'équilibre est la moyenne pondérée par les masses : (m₁T₁ + m₂T₂) / (m₁ + m₂).",
     'mixture-temperature', "Température d'équilibre (°C)", ['mass1G', 'temp1C', 'mass2G', 'temp2C'],
+    PILOT_MELTING_PLATEAU,
   ),
   m(
     '3.2', 'Chimie', S6,
@@ -766,6 +1653,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "En chauffant de la « magnésie blanche », Black isole un gaz qui éteint la flamme et trouble l'eau de chaux : le dioxyde de carbone, premier « air » identifié par un test reproductible.",
     "Évaporer une eau minérale laisse un résidu sec : sa concentration = masse du résidu (mg) / volume évaporé (L). « Homogène » ne veut pas dire « pur ».",
     'dissolved-solids', 'Résidu sec (mg/L)', ['residueMassMg', 'sampleVolumeL'],
+    PILOT_CO2_LIMEWATER,
   ),
   m(
     '3.3', 'Chimie', S5,
@@ -802,6 +1690,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Priestley, Scheele et Rutherford isolent vers 1774 les « airs » qui composent l'atmosphère. Lavoisier chauffe du mercure douze jours : le volume d'air diminue d'environ un cinquième.",
     "Quand une combustion ou une oxydation consomme le dioxygène d'un volume d'air clos, l'eau monte : fraction de dioxygène = montée d'eau / volume d'air initial (≈ 0,21).",
     'oxygen-fraction', 'Fraction de dioxygène', ['waterRiseMl', 'initialAirMl'],
+    PILOT_AIR_OXYGEN,
   ),
   m(
     '3.8', 'Chimie', S4,
@@ -860,6 +1749,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Hooke observe dans le liège des logettes qu'il nomme « cellules » ; Leeuwenhoek découvre les « animalcules ». En 1838-1839, Schleiden et Schwann énoncent que tout être vivant est fait de cellules.",
     "Au microscope, la taille d'une cellule = diamètre du champ observé / nombre de cellules alignées en travers du champ.",
     'cell-size', "Taille d'une cellule (µm)", ['fieldOfViewUm', 'cellsAcrossField'],
+    PILOT_CELL_UNIT,
   ),
   m(
     '4.2', 'SVT', S6,
@@ -888,6 +1778,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Van Helmont plante une bouture de 2,3 kg dans 90 kg de terre sèche, n'arrose qu'à l'eau de pluie : cinq ans plus tard l'arbre pèse ~77 kg et la terre n'a presque rien perdu.",
     "La matière produite par la plante = masse finale − masse initiale du plant, à comparer à la perte de masse (quasi nulle) de la terre.",
     'plant-mass-gain', 'Matière produite par la plante (g)', ['initialPlantMassG', 'finalPlantMassG'],
+    PILOT_PLANT_MATTER,
   ),
   m(
     '4.6', 'SVT', S6,
@@ -895,6 +1786,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Pendant quarante ans, Darwin mesure l'enfoncement d'une « pierre à vers » et estime que les vers font passer plusieurs tonnes de terre par hectare et par an, enfouissant la litière.",
     "Les vers de terre remontent le sol : vitesse d'enfouissement d'une dalle témoin = enfoncement mesuré / durée, en mm par jour.",
     'burial-rate', "Vitesse d'enfouissement (mm/jour)", ['sinkingMm', 'durationDays'],
+    PILOT_EARTHWORM,
   ),
   m(
     '4.7', 'SVT', S6,
@@ -923,6 +1815,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Lavoisier mesure le dioxygène consommé et le dioxyde de carbone rejeté par Séguin au repos, en digestion et à l'effort : la respiration est une combustion lente qui s'intensifie avec l'activité.",
     "Débit ventilatoire = volume d'un souffle × nombre de respirations par minute. Il augmente nettement à l'effort.",
     'ventilation-rate', 'Débit ventilatoire (mL/min)', ['breathVolumeMl', 'breathsPerMinute'],
+    PILOT_RESPIRATION,
   ),
   m(
     '4.11', 'SVT', S5,
@@ -952,6 +1845,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Mendel croise près de 30 000 plants de pois et découvre des régularités numériques : un caractère peut sauter une génération, et les proportions de la 2ᵉ génération approchent 3 pour 1.",
     "À la deuxième génération, le rapport (individus à caractère dominant) / (individus à caractère récessif) se rapproche de 3.",
     'phenotype-ratio', 'Rapport dominant / récessif', ['dominantCount', 'recessiveCount'],
+    PILOT_MENDEL,
   ),
   m(
     '4.15', 'SVT', S4,

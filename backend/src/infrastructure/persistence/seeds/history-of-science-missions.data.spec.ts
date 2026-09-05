@@ -72,9 +72,12 @@ describe('HISTORY_OF_SCIENCE_MISSIONS', () => {
   describe('missions pilotes (parcours expérimental)', () => {
     const pilots = HISTORY_OF_SCIENCE_MISSIONS.filter((m) => m.notionKey);
 
-    it('en compte une par matière', () => {
-      const subjects = pilots.map((p) => p.subject).sort();
-      expect(subjects).toEqual(['Chimie', 'Mathématiques', 'Physique', 'SVT']);
+    it('couvre les 4 matières (déploiement progressif)', () => {
+      const subjects = new Set(pilots.map((p) => p.subject));
+      expect(subjects).toEqual(
+        new Set(['Chimie', 'Mathématiques', 'Physique', 'SVT']),
+      );
+      expect(pilots.length).toBe(19);
     });
 
     it('a des clés de notion uniques et en kebab-case', () => {
@@ -107,7 +110,7 @@ describe('HISTORY_OF_SCIENCE_MISSIONS', () => {
 
     it('laisse les autres missions sur l’ancien parcours (sans notionKey)', () => {
       const nonPilots = HISTORY_OF_SCIENCE_MISSIONS.filter((m) => !m.notionKey);
-      expect(nonPilots).toHaveLength(65);
+      expect(nonPilots).toHaveLength(50);
       for (const mission of nonPilots) {
         expect(mission.guidedExperiment).toBeNull();
         expect(mission.autonomousChallenge).toBeNull();

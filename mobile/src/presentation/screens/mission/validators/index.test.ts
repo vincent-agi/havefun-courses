@@ -7,6 +7,21 @@ describe('getExperimentValidator', () => {
       'density-floats',
       'mass-conservation',
       'outbreak-source',
+      'earth-shadow',
+      'air-oxygen-fraction',
+      'plant-matter-origin',
+      'shadow-straight-line',
+      'melting-plateau',
+      'mendel-ratio',
+      'pythagoras-3-4-5',
+      'co2-limewater',
+      'earthworm-burial',
+      'disk-area-exhaustion',
+      'weight-vs-mass',
+      'respiration-co2',
+      'proportionality-rule-of-three',
+      'circuit-pile',
+      'cell-unit',
     ]) {
       expect(typeof getExperimentValidator(key)).toBe('function');
     }
