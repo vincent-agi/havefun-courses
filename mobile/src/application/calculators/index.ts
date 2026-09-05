@@ -44,6 +44,7 @@ import {
   HEIGHT_FROM_ANGLE_FORMULA,
   computeHeightFromAngle,
 } from './height-from-angle';
+import { AVERAGE_SPEED_FORMULA, computeAverageSpeed } from './average-speed';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -63,6 +64,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [GRAIN_COUNT_FORMULA]: computeGrainCount,
   [SQUARE_DIAGONAL_FORMULA]: computeSquareDiagonal,
   [HEIGHT_FROM_ANGLE_FORMULA]: computeHeightFromAngle,
+  [AVERAGE_SPEED_FORMULA]: computeAverageSpeed,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
