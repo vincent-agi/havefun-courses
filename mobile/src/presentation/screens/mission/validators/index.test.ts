@@ -7,6 +7,9 @@ describe('getExperimentValidator', () => {
       'density-floats',
       'mass-conservation',
       'outbreak-source',
+      'earth-shadow',
+      'air-oxygen-fraction',
+      'plant-matter-origin',
     ]) {
       expect(typeof getExperimentValidator(key)).toBe('function');
     }

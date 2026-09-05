@@ -4,6 +4,9 @@ import { PiCircleRatioValidator } from './PiCircleRatioValidator';
 import { DensityFloatValidator } from './DensityFloatValidator';
 import { MassConservationValidator } from './MassConservationValidator';
 import { OutbreakSourceValidator } from './OutbreakSourceValidator';
+import { EarthShadowValidator } from './EarthShadowValidator';
+import { AirOxygenValidator } from './AirOxygenValidator';
+import { PlantMatterValidator } from './PlantMatterValidator';
 
 /**
  * Un validateur d'expérience par notion (forme et fond spécifiques).
@@ -17,6 +20,9 @@ const VALIDATORS: Record<
   'density-floats': DensityFloatValidator,
   'mass-conservation': MassConservationValidator,
   'outbreak-source': OutbreakSourceValidator,
+  'earth-shadow': EarthShadowValidator,
+  'air-oxygen-fraction': AirOxygenValidator,
+  'plant-matter-origin': PlantMatterValidator,
 };
 
 export function getExperimentValidator(

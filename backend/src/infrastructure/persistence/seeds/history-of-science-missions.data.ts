@@ -507,6 +507,194 @@ const PILOT_OUTBREAK: MissionExperiment = {
   },
 };
 
+const PILOT_EARTH_SHADOW: MissionExperiment = {
+  notionKey: 'earth-shadow',
+  guidedExperiment: {
+    title: "Expérience guidée — mesurer la Terre avec deux ombres",
+    goal: "Retrouver la circonférence de la Terre à partir de l'angle d'ombre entre deux villes, comme Ératosthène.",
+    materials: [
+      'Deux gnomons identiques (tiges de 1 m bien verticales, fil à plomb)',
+      'Deux mètres rubans, une craie',
+      "L'heure exacte partagée entre les deux équipes",
+      'La distance nord-sud entre les deux lieux (carte ou GPS)',
+    ],
+    schema: [
+      "   Soleil (rayons paralleles)",
+      "      \\   \\   \\   \\",
+      "  VilleA |        VilleB |__  ombre",
+      "  (pas d'ombre)          | angle a2",
+      "",
+      "   angle du Soleil : tan(a) = longueur ombre / hauteur gnomon",
+      "   a2 - a1 = fraction de tour entre les deux villes",
+      "   circonference = distance x 360 / (a2 - a1)",
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Le même jour, à la même heure (midi solaire local), chaque équipe mesure la longueur de l'ombre de son gnomon.",
+        question: "Les deux gnomons sont-ils bien verticaux, mesurés au fil à plomb ?",
+      },
+      {
+        instruction:
+          "Chaque équipe calcule l'angle du Soleil : tan(angle) = longueur de l'ombre ÷ hauteur du gnomon.",
+        question: "L'angle est-il petit (Soleil haut) ou grand (Soleil bas) à chaque endroit ?",
+      },
+      {
+        instruction:
+          "Fais la différence des deux angles : c'est l'angle au centre de la Terre entre les deux villes.",
+        question: "Pourquoi peut-on dire que cet écart d'angle est une fraction du tour complet (360°) ?",
+      },
+      {
+        instruction:
+          "Mesure la distance nord-sud d entre les deux lieux, puis calcule : circonférence = d × 360 ÷ (écart d'angle).",
+        question: "Ton résultat est-il du bon ordre de grandeur par rapport à 40 000 km ?",
+      },
+    ],
+    measures: [
+      'Longueur de l\'ombre et hauteur du gnomon, aux deux lieux',
+      'Angle du Soleil calculé à chaque lieu, puis leur écart',
+      'Distance nord-sud entre les deux lieux',
+    ],
+    interpretation:
+      "Les rayons du Soleil arrivant parallèles, l'écart entre les deux ombres correspond à l'angle qui sépare les deux villes vues du centre de la Terre. Cet angle est la même fraction de 360° que la distance l'est de la circonférence — d'où C = d × 360 ÷ écart d'angle, la méthode d'Ératosthène.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la circonférence d'une autre planète",
+    brief:
+      "Une sonde voit le Soleil exactement au zénith au-dessus d'un point A. Au même instant, à un point B situé 1000 km au nord sur le même méridien, un gnomon projette une ombre correspondant à un angle de 9°. Calcule la circonférence de cette planète, et explique ce que représente l'angle de 9°.",
+    schema: [
+      '   Soleil au zenith            gnomon a B',
+      '        |                        \\  ombre',
+      '        v                         \\ 9 deg',
+      '   ----A------------ 1000 km ------B----  (meme meridien)',
+      '',
+      '   circonference = 1000 x 360 / 9',
+    ].join('\n'),
+    successCriteria:
+      "Tu trouves une circonférence proche de 40 000 km et tu identifies l'angle de 9° comme la fraction de tour (9/360) qui sépare A et B.",
+  },
+};
+
+const PILOT_AIR_OXYGEN: MissionExperiment = {
+  notionKey: 'air-oxygen-fraction',
+  guidedExperiment: {
+    title: "Expérience guidée — la bougie qui fait monter l'eau",
+    goal: "Mesurer quelle fraction de l'air est consommée par une combustion.",
+    materials: [
+      'Une bougie chauffe-plat sur une soucoupe',
+      "Une cuvette d'eau colorée",
+      'Un bocal transparent gradué (ou repères au feutre)',
+      'Des allumettes',
+    ],
+    schema: [
+      '        ___________            ___________',
+      '       |  bocal    |          |  bocal    |',
+      '       |   (o)     |   -->    |~~~~~~~~~~~|  eau montee ~1/5',
+      '   ~~~~|~~~~~~~~~~~|~~~~   ~~~|___________|~~~~',
+      '     eau  bougie                 bougie eteinte',
+      '',
+      "   fraction de dioxygene = montee d'eau / volume d'air initial",
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Fixe la bougie au fond de la cuvette, verse 2-3 cm d'eau colorée. Allume la bougie et recouvre-la du bocal retourné. Marque le niveau d'eau de départ dans le bocal.",
+        question: "Le bocal repose-t-il bien dans l'eau, sans laisser passer d'air ?",
+      },
+      {
+        instruction:
+          "Observe : la bougie s'éteint, l'eau monte dans le bocal. Marque le niveau final.",
+        question: "La bougie s'éteint-elle AVANT que toute l'eau ne soit montée ?",
+      },
+      {
+        instruction:
+          "Calcule la fraction : hauteur d'eau montée ÷ hauteur d'air au départ.",
+        question: "Pourquoi l'eau ne monte-t-elle que d'environ un cinquième, et pas davantage ?",
+      },
+    ],
+    measures: [
+      "Volume (ou hauteur) d'air dans le bocal au départ",
+      "Volume (ou hauteur) d'eau montée à la fin",
+    ],
+    interpretation:
+      "L'eau monte d'environ 1/5 : seule une partie de l'air, le dioxygène (~21 %), est consommée par la combustion. Le reste (~78 %), le diazote, n'entretient pas la flamme et reste dans le bocal.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la rouille qui consomme l'air",
+    brief:
+      "Sans aucune flamme, place de la paille de fer humidifiée d'eau vinaigrée au fond d'un tube à essai retourné sur de l'eau. Relève la montée d'eau au bout de quelques jours. Quelle fraction de l'air a été consommée, et par quoi ?",
+    schema: [
+      '   |___|  <- eau montee apres quelques jours',
+      '   | Fe|  paille de fer humide qui rouille',
+      '   |   |',
+      '  ~~~~~~~  eau',
+      '',
+      "   fraction consommee = montee d'eau / volume d'air initial",
+    ].join('\n'),
+    successCriteria:
+      "Tu trouves une fraction proche de 1/5 (~21 %) et tu identifies que c'est le fer qui, en rouillant, a fixé le dioxygène de l'air.",
+  },
+};
+
+const PILOT_PLANT_MATTER: MissionExperiment = {
+  notionKey: 'plant-matter-origin',
+  guidedExperiment: {
+    title: "Expérience guidée — la plante grossit, la terre non",
+    goal: "Vérifier que la matière fabriquée par une plante ne vient (presque) pas du sol.",
+    materials: [
+      'Une balance de précision, un pot avec du terreau séché et pesé',
+      'Un jeune plant (haricot ou tournesol)',
+      "De l'eau de pluie mesurée, un film pour couvrir la terre",
+      'Un cahier de suivi (6 à 8 semaines)',
+    ],
+    schema: [
+      '   DEBUT                        FIN (6-8 semaines)',
+      '     |  plant : m_p1              |  plant : m_p2  (bien plus lourd)',
+      '   [====]  terre seche : m_t1   [====]  terre seche : m_t2',
+      '',
+      '   gain plante = m_p2 - m_p1',
+      '   perte terre = m_t1 - m_t2   (tres petite)',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Pèse le plant seul (m_p1) et la terre sèche du pot (m_t1). Note les deux masses.",
+        question: "La terre est-elle bien sèche avant la pesée, pour pouvoir comparer à la fin ?",
+      },
+      {
+        instruction:
+          "Couvre la surface de la terre, n'arrose qu'à l'eau de pluie mesurée, place au soleil. Suis la croissance chaque semaine.",
+        question: "Pourquoi couvrir la terre et n'utiliser que de l'eau de pluie ?",
+      },
+      {
+        instruction:
+          "Après 6 à 8 semaines, sèche séparément la plante et la terre, puis repèse : m_p2 et m_t2.",
+        question: "Le gain de masse de la plante ressemble-t-il à la perte de masse de la terre ?",
+      },
+    ],
+    measures: [
+      'Masse du plant au début (m_p1) et à la fin (m_p2)',
+      'Masse de la terre sèche au début (m_t1) et à la fin (m_t2)',
+    ],
+    interpretation:
+      "La plante gagne beaucoup de masse (des dizaines de grammes) alors que la terre n'en perd presque pas (quelques grammes). La matière végétale ne vient donc pas du sol : c'est le résultat de van Helmont.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la lumière est-elle indispensable ?",
+    brief:
+      "Conçois une comparaison : deux plants identiques, mêmes eau, terre et température, l'un à la lumière, l'autre à l'obscurité. Après quelques semaines, mesure la masse sèche produite par chacun. Conclus sur le rôle de la lumière et sur l'origine de la matière fabriquée.",
+    schema: [
+      '   PLANT LUMIERE        PLANT OBSCURITE',
+      '     (soleil)              (placard)',
+      '   meme eau / terre / temperature',
+      '   masse seche produite : g_L        g_O',
+      '   comparer  g_L  vs  g_O',
+    ].join('\n'),
+    successCriteria:
+      "Le plant éclairé produit nettement plus de matière que celui à l'obscurité, et tu expliques que l'essentiel de cette matière vient de l'air (dioxyde de carbone) et de l'eau, grâce à la lumière.",
+  },
+};
+
 export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
   // ------------------------- M1 · Mathématiques -------------------------
   m(
@@ -572,6 +760,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Le jour du solstice, le Soleil éclaire le fond des puits à Syène tandis qu'un gnomon projette une ombre à Alexandrie. Ératosthène mesure l'angle (≈ 7,2°, soit 1/50 de tour) et en déduit la circonférence terrestre.",
     "Les rayons du Soleil arrivant parallèles, l'angle d'ombre entre deux villes d'un même méridien est la fraction de tour qui sépare leurs verticales : circonférence = distance × 360 / angle.",
     'earth-circumference', 'Circonférence terrestre (km)', ['shadowAngleDeg', 'distanceKm'],
+    PILOT_EARTH_SHADOW,
   ),
   m(
     '1.10', 'Mathématiques', S5,
@@ -802,6 +991,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Priestley, Scheele et Rutherford isolent vers 1774 les « airs » qui composent l'atmosphère. Lavoisier chauffe du mercure douze jours : le volume d'air diminue d'environ un cinquième.",
     "Quand une combustion ou une oxydation consomme le dioxygène d'un volume d'air clos, l'eau monte : fraction de dioxygène = montée d'eau / volume d'air initial (≈ 0,21).",
     'oxygen-fraction', 'Fraction de dioxygène', ['waterRiseMl', 'initialAirMl'],
+    PILOT_AIR_OXYGEN,
   ),
   m(
     '3.8', 'Chimie', S4,
@@ -888,6 +1078,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Van Helmont plante une bouture de 2,3 kg dans 90 kg de terre sèche, n'arrose qu'à l'eau de pluie : cinq ans plus tard l'arbre pèse ~77 kg et la terre n'a presque rien perdu.",
     "La matière produite par la plante = masse finale − masse initiale du plant, à comparer à la perte de masse (quasi nulle) de la terre.",
     'plant-mass-gain', 'Matière produite par la plante (g)', ['initialPlantMassG', 'finalPlantMassG'],
+    PILOT_PLANT_MATTER,
   ),
   m(
     '4.6', 'SVT', S6,
