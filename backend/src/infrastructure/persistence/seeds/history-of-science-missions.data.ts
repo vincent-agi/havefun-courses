@@ -695,6 +695,181 @@ const PILOT_PLANT_MATTER: MissionExperiment = {
   },
 };
 
+const PILOT_SHADOW_LINE: MissionExperiment = {
+  notionKey: 'shadow-straight-line',
+  guidedExperiment: {
+    title: "Expérience guidée — l'ombre du gnomon, horloge et boussole",
+    goal: "Montrer que la lumière du Soleil va en ligne droite : l'ombre a un bord net et une longueur qui suit une loi régulière.",
+    materials: [
+      'Un gnomon vertical (tige de 1 m, fil à plomb)',
+      'Une craie, un mètre ruban',
+      'Une boussole pour vérifier',
+    ],
+    schema: [
+      '   Soleil                Soleil               Soleil',
+      '     \\                     |                    /',
+      '   ___\\___             ____|____            ___/___',
+      '   ====== ombre longue  == ombre courte  ====== ombre longue',
+      '   matin                  midi (nord)          soir',
+      '',
+      "   bord de l'ombre = net  ->  la lumiere ne contourne pas l'obstacle",
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Plante le gnomon. Toutes les heures, trace le contour de son ombre à la craie et note sa longueur et l'heure.",
+        question: "Le bord de l'ombre est-il net ou flou ?",
+      },
+      {
+        instruction:
+          "Repère l'ombre la plus courte de la journée : c'est le midi solaire. Sa direction donne l'axe nord-sud.",
+        question: "L'ombre la plus courte pointe-t-elle vers le nord (vérifie à la boussole) ?",
+      },
+      {
+        instruction:
+          "Interpose ta main entre le Soleil et le sol : observe le bord de l'ombre portée.",
+        question: "Si la lumière contournait les obstacles, l'ombre aurait-elle un bord aussi net ?",
+      },
+    ],
+    measures: [
+      "Longueur et heure de l'ombre, matin / midi / soir (au moins 3 relevés)",
+      "Direction de l'ombre la plus courte, comparée au nord de la boussole",
+    ],
+    interpretation:
+      "L'ombre a un bord net et sa longueur passe par un minimum à midi : la lumière se propage en ligne droite. C'est ce qui rend l'ombre du gnomon utilisable comme horloge et comme boussole.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — fabriquer un cadran solaire",
+    brief:
+      "Construis un cadran solaire horizontal : oriente le style vers le nord, puis trace les lignes horaires en relevant la position de l'ombre à des heures connues. Le lendemain, vérifie que le cadran donne l'heure solaire.",
+    schema: [
+      '        12',
+      '    11  |  13',
+      '   10 \\ | / 14      style oriente vers le NORD',
+      '  9 ---(o)--- 15     lignes horaires = positions de l\'ombre',
+      '',
+      "   verifier le lendemain : heure lue  vs  heure reelle",
+    ].join('\n'),
+    successCriteria:
+      "Ton cadran donne l'heure solaire à moins de 20 minutes près, et tu expliques qu'il fonctionne parce que l'ombre du style a une direction précise (lumière en ligne droite).",
+  },
+};
+
+const PILOT_MELTING_PLATEAU: MissionExperiment = {
+  notionKey: 'melting-plateau',
+  guidedExperiment: {
+    title: "Expérience guidée — la température qui reste bloquée",
+    goal: "Montrer qu'un corps pur change d'état à température fixe (palier).",
+    materials: [
+      'De la glace pilée dans un bécher',
+      'Un thermomètre (−10 à +110 °C), un chronomètre',
+      'Une source de chaleur douce (bain d\'eau chaude ou réchaud surveillé)',
+    ],
+    schema: [
+      '   T (deg C)',
+      '   100 |            _____ palier d\'ebullition',
+      '       |           /',
+      '     0 |__________/   <- palier de fusion (glace + eau)',
+      '       |_____________________  temps',
+      '       glace   fonte    eau qui chauffe',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Plonge le thermomètre dans la glace pilée et relève la température de départ.",
+        question: "Y a-t-il encore de la glace ET de l'eau dans le bécher ?",
+      },
+      {
+        instruction:
+          "Chauffe doucement et relève la température toutes les minutes, en notant l'aspect (glace + eau, puis eau seule).",
+        question: "Pendant que la glace fond, le thermomètre monte-t-il ? Où va la chaleur apportée ?",
+      },
+      {
+        instruction:
+          "Continue jusqu'à ce que toute la glace ait fondu, puis relève la température.",
+        question: "La température ne remonte-t-elle qu'une fois toute la glace fondue ?",
+      },
+    ],
+    measures: [
+      "Température au début (glace + eau)",
+      "Température après quelques minutes (glace + eau encore présentes)",
+      "Température quand toute la glace a fondu",
+    ],
+    interpretation:
+      "Tant que glace et eau coexistent, la température reste bloquée vers 0 °C : la chaleur apportée sert à faire fondre la glace, pas à chauffer. C'est la chaleur latente de Joseph Black.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — la courbe de refroidissement d'un corps pur",
+    brief:
+      "Fais fondre un peu de paraffine (ou d'acide stéarique), puis laisse-la refroidir à l'air en relevant sa température. Repère le palier de solidification et déduis-en la température caractéristique de ce corps.",
+    schema: [
+      '   T (deg C)',
+      '       |\\',
+      '       | \\____ palier de solidification',
+      '       |      \\____  (temperature caracteristique)',
+      '       |___________\\____  temps',
+      '       liquide  fige    solide qui refroidit',
+    ].join('\n'),
+    successCriteria:
+      "Tu repères un palier (deux relevés stables) pendant la solidification et tu en déduis la température caractéristique du corps, en expliquant qu'il libère alors de la chaleur.",
+  },
+};
+
+const PILOT_MENDEL: MissionExperiment = {
+  notionKey: 'mendel-ratio',
+  guidedExperiment: {
+    title: "Expérience guidée — compter la descendance",
+    goal: "Retrouver le rapport 3 pour 1 dans la descendance d'un croisement.",
+    materials: [
+      "Plusieurs épis de maïs pédagogique (grains colorés / clairs) OU des lots de graines issus d'un croisement connu",
+      'Une fiche de comptage, une calculatrice',
+    ],
+    schema: [
+      '   epi 1 : [X X . X X . X X X X . X]   dominant X  /  recessif .',
+      '   epi 2 : [. X X X X . X X . X X X]',
+      '   epi 3 : [X X X . X X X . X X . X]',
+      '',
+      '   rapport = total dominant / total recessif   ->  proche de 3',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Sur chaque épi (ou lot), compte les grains de chaque type : forme dominante et forme récessive.",
+        question: "Le rapport sur un seul épi est-il déjà proche de 3, ou faut-il en cumuler plusieurs ?",
+      },
+      {
+        instruction:
+          "Additionne les comptes de tous les épis, puis calcule : total dominant ÷ total récessif.",
+        question: "Ton rapport global se rapproche-t-il de 3 quand tu comptes plus de grains ?",
+      },
+      {
+        instruction:
+          "Compare ton rapport à la valeur 3 attendue quand un caractère dominant masque un caractère récessif.",
+        question: "Pourquoi la forme récessive réapparaît-elle alors qu'elle avait « disparu » à la génération précédente ?",
+      },
+    ],
+    measures: [
+      "Pour chaque épi : nombre de grains dominants et récessifs",
+      "Totaux cumulés et rapport dominant / récessif",
+    ],
+    interpretation:
+      "Sur un grand nombre de grains, le rapport se rapproche de 3 pour 1 : chaque caractère est porté par des facteurs hérités par paires, un de chaque parent, et le facteur dominant masque le récessif sans le supprimer.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — un caractère variable dans la nature",
+    brief:
+      "Choisis un caractère à deux versions sur une plante commune (par exemple trèfle à folioles marquées ou non, pâquerette à ligules blanches ou rosées). Échantillonne au moins 100 individus, compte les deux formes, calcule les proportions et dis si le résultat est compatible avec un caractère à deux versions.",
+    schema: [
+      '   population echantillonnee (>= 100 individus)',
+      '   forme A : n_A        forme B : n_B',
+      '   proportion A = n_A / (n_A + n_B)',
+      '   -> une forme peut etre plus frequente que l\'autre',
+    ].join('\n'),
+    successCriteria:
+      "Tu comptes au moins 100 individus, tu donnes les proportions des deux formes, et tu conclus qu'un caractère à deux versions (dont l'une peut dominer ou être plus répandue) est compatible avec l'hérédité.",
+  },
+};
+
 export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
   // ------------------------- M1 · Mathématiques -------------------------
   m(
@@ -869,6 +1044,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "En suivant l'ombre d'une tige verticale au fil du jour, les savants de Milet repèrent le midi, le nord et les solstices : c'est, selon le programme, « la première loi scientifique connue de l'Humanité ».",
     "La lumière se propageant en ligne droite, l'ombre a un bord net et une longueur calculable : hauteur du Soleil = arctan(hauteur du gnomon / longueur de l'ombre).",
     'sun-elevation-from-shadow', 'Hauteur du Soleil (°)', ['gnomonHeightM', 'shadowLengthM'],
+    PILOT_SHADOW_LINE,
   ),
   m(
     '2.7', 'Physique', S5,
@@ -948,6 +1124,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Black constate qu'un mélange de glace et d'eau reste bloqué à 0 °C tant qu'il fond, même chauffé : la chaleur apportée est « latente », elle sert à changer l'état.",
     "En mélangeant deux masses d'eau, la température d'équilibre est la moyenne pondérée par les masses : (m₁T₁ + m₂T₂) / (m₁ + m₂).",
     'mixture-temperature', "Température d'équilibre (°C)", ['mass1G', 'temp1C', 'mass2G', 'temp2C'],
+    PILOT_MELTING_PLATEAU,
   ),
   m(
     '3.2', 'Chimie', S6,
@@ -1143,6 +1320,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Mendel croise près de 30 000 plants de pois et découvre des régularités numériques : un caractère peut sauter une génération, et les proportions de la 2ᵉ génération approchent 3 pour 1.",
     "À la deuxième génération, le rapport (individus à caractère dominant) / (individus à caractère récessif) se rapproche de 3.",
     'phenotype-ratio', 'Rapport dominant / récessif', ['dominantCount', 'recessiveCount'],
+    PILOT_MENDEL,
   ),
   m(
     '4.15', 'SVT', S4,

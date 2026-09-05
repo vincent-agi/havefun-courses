@@ -7,6 +7,9 @@ import { OutbreakSourceValidator } from './OutbreakSourceValidator';
 import { EarthShadowValidator } from './EarthShadowValidator';
 import { AirOxygenValidator } from './AirOxygenValidator';
 import { PlantMatterValidator } from './PlantMatterValidator';
+import { ShadowStraightLineValidator } from './ShadowStraightLineValidator';
+import { MeltingPlateauValidator } from './MeltingPlateauValidator';
+import { MendelRatioValidator } from './MendelRatioValidator';
 
 /**
  * Un validateur d'expérience par notion (forme et fond spécifiques).
@@ -23,6 +26,9 @@ const VALIDATORS: Record<
   'earth-shadow': EarthShadowValidator,
   'air-oxygen-fraction': AirOxygenValidator,
   'plant-matter-origin': PlantMatterValidator,
+  'shadow-straight-line': ShadowStraightLineValidator,
+  'melting-plateau': MeltingPlateauValidator,
+  'mendel-ratio': MendelRatioValidator,
 };
 
 export function getExperimentValidator(

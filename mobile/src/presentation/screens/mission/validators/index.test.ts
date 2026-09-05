@@ -10,6 +10,9 @@ describe('getExperimentValidator', () => {
       'earth-shadow',
       'air-oxygen-fraction',
       'plant-matter-origin',
+      'shadow-straight-line',
+      'melting-plateau',
+      'mendel-ratio',
     ]) {
       expect(typeof getExperimentValidator(key)).toBe('function');
     }
