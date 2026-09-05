@@ -40,6 +40,10 @@ import {
   SQUARE_DIAGONAL_FORMULA,
   computeSquareDiagonal,
 } from './square-diagonal';
+import {
+  HEIGHT_FROM_ANGLE_FORMULA,
+  computeHeightFromAngle,
+} from './height-from-angle';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -58,6 +62,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [PYTHAGOREAN_HYPOTENUSE_FORMULA]: computePythagoreanHypotenuse,
   [GRAIN_COUNT_FORMULA]: computeGrainCount,
   [SQUARE_DIAGONAL_FORMULA]: computeSquareDiagonal,
+  [HEIGHT_FROM_ANGLE_FORMULA]: computeHeightFromAngle,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
