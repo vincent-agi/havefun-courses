@@ -10,6 +10,9 @@ import { PlantMatterValidator } from './PlantMatterValidator';
 import { ShadowStraightLineValidator } from './ShadowStraightLineValidator';
 import { MeltingPlateauValidator } from './MeltingPlateauValidator';
 import { MendelRatioValidator } from './MendelRatioValidator';
+import { PythagorasValidator } from './PythagorasValidator';
+import { Co2LimewaterValidator } from './Co2LimewaterValidator';
+import { EarthwormBurialValidator } from './EarthwormBurialValidator';
 
 /**
  * Un validateur d'expérience par notion (forme et fond spécifiques).
@@ -29,6 +32,9 @@ const VALIDATORS: Record<
   'shadow-straight-line': ShadowStraightLineValidator,
   'melting-plateau': MeltingPlateauValidator,
   'mendel-ratio': MendelRatioValidator,
+  'pythagoras-3-4-5': PythagorasValidator,
+  'co2-limewater': Co2LimewaterValidator,
+  'earthworm-burial': EarthwormBurialValidator,
 };
 
 export function getExperimentValidator(

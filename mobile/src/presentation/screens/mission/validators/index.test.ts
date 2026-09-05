@@ -13,6 +13,9 @@ describe('getExperimentValidator', () => {
       'shadow-straight-line',
       'melting-plateau',
       'mendel-ratio',
+      'pythagoras-3-4-5',
+      'co2-limewater',
+      'earthworm-burial',
     ]) {
       expect(typeof getExperimentValidator(key)).toBe('function');
     }

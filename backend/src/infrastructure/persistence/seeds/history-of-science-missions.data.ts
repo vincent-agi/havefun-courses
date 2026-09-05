@@ -870,6 +870,180 @@ const PILOT_MENDEL: MissionExperiment = {
   },
 };
 
+const PILOT_PYTHAGORAS: MissionExperiment = {
+  notionKey: 'pythagoras-3-4-5',
+  guidedExperiment: {
+    title: "Expérience guidée — les carrés sur les côtés du triangle rectangle",
+    goal: "Vérifier que, dans un triangle rectangle, le carré de l'hypoténuse est la somme des carrés des deux autres côtés.",
+    materials: [
+      'Un décamètre, un cordeau, des piquets, une craie',
+      "Une équerre ou une corde à 13 nœuds pour l'angle droit",
+      'De quoi tracer et quadriller des carrés au sol (carreaux de 50 cm)',
+    ],
+    schema: [
+      '            +--------+',
+      '            |  c x c |  carre sur l\'hypotenuse',
+      '   +----+   |        |',
+      '   |b x b|  *---------  hypotenuse c',
+      '   +----+ / |',
+      '   |     / a| triangle rectangle (a et b : cotes de l\'angle droit)',
+      '   +----+   +----+',
+      '   a x a    ...',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Trace au sol un triangle rectangle de côtés 3 m et 4 m (angle droit vérifié à l'équerre ou à la corde à 13 nœuds). Mesure l'hypoténuse.",
+        question: "Combien mesure l'hypoténuse que tu as tracée ?",
+      },
+      {
+        instruction:
+          "Sur chaque côté, trace le carré correspondant. Recouvre les deux petits carrés de carreaux de 50 cm et compte-les.",
+        question: "Combien de carreaux dans le carré de 3 m ? dans celui de 4 m ?",
+      },
+      {
+        instruction:
+          "Compte les carreaux du grand carré (sur l'hypoténuse). Compare à la somme des deux autres.",
+        question: "Le grand carré contient-il exactement autant de carreaux que les deux petits réunis ?",
+      },
+    ],
+    measures: [
+      'Longueurs des deux côtés de l\'angle droit (a et b)',
+      'Longueur mesurée de l\'hypoténuse (c)',
+    ],
+    interpretation:
+      "L'aire du carré sur l'hypoténuse est égale à la somme des aires des deux autres carrés : c'est a² + b² = c². La mesure directe de l'hypoténuse confirme le calcul.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — le mur est-il bien d'aplomb ?",
+    brief:
+      "Un maçon veut vérifier qu'un mur est perpendiculaire au sol sans monter d'échafaudage. Il mesure 0,60 m le long du sol, 0,80 m le long du mur, et 1,00 m en diagonale entre ces deux repères. En n'utilisant que ces trois longueurs, dis si l'angle mur/sol est droit.",
+    schema: [
+      '   mur |',
+      '       |\\',
+      '  0,80 | \\  1,00  (diagonale)',
+      '       |  \\',
+      '       +---\\----  sol',
+      '        0,60',
+      '   angle droit  <=>  0,60^2 + 0,80^2 = 1,00^2 ?',
+    ].join('\n'),
+    successCriteria:
+      "Tu calcules 0,60² + 0,80² et tu le compares à 1,00², puis tu conclus correctement que l'angle est droit (réciproque du théorème de Pythagore).",
+  },
+};
+
+const PILOT_CO2_LIMEWATER: MissionExperiment = {
+  notionKey: 'co2-limewater',
+  guidedExperiment: {
+    title: "Expérience guidée — l'eau de chaux qui se trouble",
+    goal: "Identifier le dioxyde de carbone grâce à un test reproductible : le trouble de l'eau de chaux.",
+    materials: [
+      "De l'eau de chaux limpide (préparée et filtrée)",
+      'Trois pots transparents, une paille',
+      'Du vinaigre et du bicarbonate de soude',
+    ],
+    schema: [
+      '   Pot 1            Pot 2                 Pot 3 (temoin)',
+      '   souffle a la     gaz du vinaigre       air ambiant',
+      '   paille           + bicarbonate         (on agite)',
+      '   -> trouble ?     -> trouble ?          -> trouble ?',
+      '',
+      '   trouble blanc  =  presence de dioxyde de carbone',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Verse un fond d'eau de chaux dans les trois pots.",
+        question: "L'eau de chaux est-elle bien limpide au départ dans les trois pots ?",
+      },
+      {
+        instruction:
+          "Pot 1 : souffle doucement à la paille pendant 30 s. Pot 2 : fais réagir vinaigre + bicarbonate dans un verre voisin et transvase le gaz dans le pot. Pot 3 : agite simplement à l'air.",
+        question: "Quels pots se troublent, et lequel reste limpide ?",
+      },
+      {
+        instruction:
+          "Compare : qu'ont en commun les sources qui font se troubler l'eau de chaux ?",
+        question: "Le gaz de ton souffle et le gaz du vinaigre + bicarbonate sont-ils le même gaz ?",
+      },
+    ],
+    measures: [
+      "Aspect de l'eau de chaux dans chaque pot (trouble / limpide)",
+      "Délai d'apparition du trouble",
+    ],
+    interpretation:
+      "L'eau de chaux se trouble avec l'air expiré et avec le gaz du vinaigre + bicarbonate, mais pas dans le témoin : ces sources dégagent toutes le même gaz, le dioxyde de carbone. Le trouble est son test d'identification.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — qui produit du dioxyde de carbone ?",
+    brief:
+      "À l'aide de l'eau de chaux, détermine si du dioxyde de carbone est produit par : la combustion d'une bougie, la fermentation d'un jus sucré avec de la levure, et la respiration de graines de lentilles en germination. Conçois le montage pour chaque cas et conclus.",
+    schema: [
+      '   bougie qui brule  |  jus sucre + levure  |  graines qui germent',
+      '   (cloche)           |  (bouteille fermee)   |  (bocal ferme)',
+      '        \\             |         |             |        /',
+      '         ---> eau de chaux : trouble ou limpide ? <---',
+    ].join('\n'),
+    successCriteria:
+      "Tu observes que l'eau de chaux se trouble dans les trois cas, et tu conclus que combustion, fermentation et respiration produisent toutes du dioxyde de carbone.",
+  },
+};
+
+const PILOT_EARTHWORM: MissionExperiment = {
+  notionKey: 'earthworm-burial',
+  guidedExperiment: {
+    title: "Expérience guidée — les vers enfouissent la litière",
+    goal: "Mesurer que la faune du sol (les vers) enfouit les feuilles mortes et fabrique l'humus.",
+    materials: [
+      "Des dalles plates (ou ardoises) posées à plat, des piquets repères",
+      "Des sachets à mailles fines et à grosses mailles, des feuilles mortes pesées",
+      'Une balance, une règle, un carnet de suivi (plusieurs semaines)',
+    ],
+    schema: [
+      '   dalle temoin :  niveau initial  ----  ->  s\'enfonce peu a peu',
+      '',
+      '   sachet mailles FINES   : vers exclus  -> feuilles peu decomposees',
+      '   sachet GROSSES mailles : faune entre  -> feuilles bien decomposees',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Pose des dalles à plat sur la pelouse contre des piquets repères. Note leur niveau. Laisse en place plusieurs semaines, puis remesure l'enfoncement.",
+        question: "La dalle s'est-elle enfoncée ? D'où vient la terre qui la recouvre ?",
+      },
+      {
+        instruction:
+          "Enferme des masses égales de feuilles mortes dans un sachet à mailles fines (sans vers) et un à grosses mailles (avec la faune). Enterre-les, puis déterre et repèse après 6 à 10 semaines.",
+        question: "Dans quel sachet reste-t-il le moins de feuilles ?",
+      },
+      {
+        instruction:
+          "Compare l'état des feuilles des deux sachets et repère, à la surface, les petits tortillons de terre (turricules) laissés par les vers.",
+        question: "Les feuilles du sachet à grosses mailles sont-elles plus fragmentées, plus mélangées à la terre ?",
+      },
+    ],
+    measures: [
+      "Enfoncement de la dalle témoin et durée du suivi",
+      "Masse de feuilles restante : sachet mailles fines / sachet grosses mailles",
+    ],
+    interpretation:
+      "Les feuilles disparaissent bien plus vite quand la faune du sol peut y accéder ; les vers mélangent les horizons et enfouissent la litière, qu'ils transforment en humus. C'est ce que Darwin a mesuré pendant quarante ans.",
+  },
+  autonomousChallenge: {
+    title: "Défi en autonomie — que sait recycler la faune du sol ?",
+    brief:
+      "Compare la vitesse de décomposition de trois déchets déposés dans des sachets à grosses mailles enterrés côte à côte : une feuille, un morceau de pain, un morceau de plastique fin. Sur une durée que tu fixes, mesure la part de masse perdue par chacun et conclus.",
+    schema: [
+      '   feuille        pain          plastique fin',
+      '   masse perdue : %F           %P            %plast',
+      '',
+      '   la faune du sol recycle la matiere organique, pas le plastique',
+    ].join('\n'),
+    successCriteria:
+      "La feuille et le pain perdent une part importante de leur masse, le plastique presque rien, et tu conclus que la faune du sol recycle la matière organique mais pas le plastique.",
+  },
+};
+
 export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
   // ------------------------- M1 · Mathématiques -------------------------
   m(
@@ -950,6 +1124,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "La tablette babylonienne Plimpton 322 (v. 1800 av. J.-C.) aligne déjà des triplets vérifiant a² + b² = c². C'est l'école de Pythagore, à Crotone, à qui l'on attribue la première démonstration générale.",
     "Dans un triangle rectangle, l'hypoténuse se calcule à partir des deux côtés de l'angle droit : c = √(a² + b²).",
     'pythagorean-hypotenuse', "Longueur de l'hypoténuse (m)", ['legAM', 'legBM'],
+    PILOT_PYTHAGORAS,
   ),
   m(
     '1.12', 'Mathématiques', S4,
@@ -1132,6 +1307,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "En chauffant de la « magnésie blanche », Black isole un gaz qui éteint la flamme et trouble l'eau de chaux : le dioxyde de carbone, premier « air » identifié par un test reproductible.",
     "Évaporer une eau minérale laisse un résidu sec : sa concentration = masse du résidu (mg) / volume évaporé (L). « Homogène » ne veut pas dire « pur ».",
     'dissolved-solids', 'Résidu sec (mg/L)', ['residueMassMg', 'sampleVolumeL'],
+    PILOT_CO2_LIMEWATER,
   ),
   m(
     '3.3', 'Chimie', S5,
@@ -1263,6 +1439,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Pendant quarante ans, Darwin mesure l'enfoncement d'une « pierre à vers » et estime que les vers font passer plusieurs tonnes de terre par hectare et par an, enfouissant la litière.",
     "Les vers de terre remontent le sol : vitesse d'enfouissement d'une dalle témoin = enfoncement mesuré / durée, en mm par jour.",
     'burial-rate', "Vitesse d'enfouissement (mm/jour)", ['sinkingMm', 'durationDays'],
+    PILOT_EARTHWORM,
   ),
   m(
     '4.7', 'SVT', S6,
