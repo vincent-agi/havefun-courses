@@ -9,6 +9,9 @@
 # env
 .env
 
+# médias uploadés (stockage disque)
+/storage
+
 # OS
 .DS_Store
 

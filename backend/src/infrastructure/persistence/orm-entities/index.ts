@@ -5,6 +5,7 @@ import { ChallengeOrmEntity } from './challenge.orm-entity.js';
 import { SubmissionOrmEntity } from './submission.orm-entity.js';
 import { BadgeOrmEntity } from './badge.orm-entity.js';
 import { UserBadgeOrmEntity } from './user-badge.orm-entity.js';
+import { MediaAssetOrmEntity } from './media-asset.orm-entity.js';
 
 export const ormEntities = [
   PassionOrmEntity,
@@ -14,6 +15,7 @@ export const ormEntities = [
   SubmissionOrmEntity,
   BadgeOrmEntity,
   UserBadgeOrmEntity,
+  MediaAssetOrmEntity,
 ];
 
 export {
@@ -24,4 +26,5 @@ export {
   SubmissionOrmEntity,
   BadgeOrmEntity,
   UserBadgeOrmEntity,
+  MediaAssetOrmEntity,
 };

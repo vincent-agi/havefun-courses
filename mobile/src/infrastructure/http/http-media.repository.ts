@@ -1,32 +1,42 @@
-import { httpClient } from './http-client';
+import { API_BASE_URL } from './api-config';
+import { sessionStorage } from '../storage/session-storage';
 import {
   MediaRepository,
-  UploadUrlResult,
+  UploadPhotoResult,
 } from '../../domain/repositories/media.repository';
 
+const PHOTO_MIME_TYPE = 'image/jpeg';
+
+type UploadResponse = { id: string; url: string };
+
 export class HttpMediaRepository implements MediaRepository {
-  async requestUploadUrl(contentType: string): Promise<UploadUrlResult> {
-    return httpClient.post<UploadUrlResult>('/media/upload-url', {
-      contentType,
+  async uploadPhoto(fileUri: string): Promise<UploadPhotoResult> {
+    const formData = new FormData();
+    // React Native accepte cette forme { uri, name, type } pour un fichier local.
+    formData.append('file', {
+      uri: fileUri,
+      name: 'preuve.jpg',
+      type: PHOTO_MIME_TYPE,
+    } as unknown as Blob);
+
+    const token = await sessionStorage.getAccessToken();
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    // Ne pas fixer Content-Type manuellement : fetch ajoute le boundary multipart.
+
+    const response = await fetch(`${API_BASE_URL}/media`, {
+      method: 'POST',
+      headers,
+      body: formData,
     });
-  }
 
-  async uploadFile(
-    uploadUrl: string,
-    fileUri: string,
-    contentType: string,
-  ): Promise<void> {
-    const fileResponse = await fetch(fileUri);
-    const blob = await fileResponse.blob();
-
-    const uploadResponse = await fetch(uploadUrl, {
-      method: 'PUT',
-      headers: { 'Content-Type': contentType },
-      body: blob,
-    });
-
-    if (!uploadResponse.ok) {
+    if (!response.ok) {
       throw new Error("Échec de l'envoi de la photo.");
     }
+
+    const payload = (await response.json()) as UploadResponse;
+    return { mediaUrl: payload.url };
   }
 }

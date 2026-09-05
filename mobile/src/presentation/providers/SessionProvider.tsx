@@ -36,6 +36,11 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   });
 
   const restoreSession = useCallback(async () => {
+    const token = await sessionStorage.getAccessToken();
+    if (!token) {
+      setState({ status: 'signed-out', user: null });
+      return;
+    }
     try {
       const user = await container.getCurrentUserUseCase.execute();
       setState({ status: 'signed-in', user });
