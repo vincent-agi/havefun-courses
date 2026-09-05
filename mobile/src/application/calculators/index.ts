@@ -23,6 +23,10 @@ import {
   LOWEST_COMMON_MULTIPLE_FORMULA,
   computeLowestCommonMultiple,
 } from './lowest-common-multiple';
+import {
+  EARTH_CIRCUMFERENCE_FORMULA,
+  computeEarthCircumference,
+} from './earth-circumference';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -36,6 +40,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [DISK_AREA_FORMULA]: computeDiskArea,
   [NET_BALANCE_FORMULA]: computeNetBalance,
   [LOWEST_COMMON_MULTIPLE_FORMULA]: computeLowestCommonMultiple,
+  [EARTH_CIRCUMFERENCE_FORMULA]: computeEarthCircumference,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
