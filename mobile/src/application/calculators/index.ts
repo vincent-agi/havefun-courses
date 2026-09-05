@@ -17,6 +17,7 @@ import {
   AXIAL_SYMMETRY_ERROR_FORMULA,
   computeAxialSymmetryError,
 } from './axial-symmetry-error';
+import { DISK_AREA_FORMULA, computeDiskArea } from './disk-area';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -27,6 +28,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [FOURTH_PROPORTIONAL_FORMULA]: computeFourthProportional,
   [EUCLIDEAN_REMAINDER_FORMULA]: computeEuclideanRemainder,
   [AXIAL_SYMMETRY_ERROR_FORMULA]: computeAxialSymmetryError,
+  [DISK_AREA_FORMULA]: computeDiskArea,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
