@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+import type { Repository, ObjectLiteral } from 'typeorm';
 import { AppDataSource } from '../data-source.js';
 import {
   PassionOrmEntity,
@@ -13,17 +14,43 @@ import {
   DEMO_USER_ID,
   DEMO_USER_EMAIL,
 } from '../../auth/demo-user.constant.js';
+import {
+  HISTORY_OF_SCIENCE_MISSIONS,
+  type MissionSubject,
+} from './history-of-science-missions.data.js';
+
+/**
+ * Insère la ligne si aucune n'existe déjà pour la clé unique donnée, sinon
+ * met à jour ses champs. Rend le seed rejouable (`npm run seed` idempotent).
+ */
+async function upsert<T extends ObjectLiteral>(
+  repo: Repository<T>,
+  match: Partial<T>,
+  data: Partial<T>,
+): Promise<T> {
+  const existing = await repo.findOne({ where: match as never });
+  if (existing) {
+    repo.merge(existing, data);
+    return repo.save(existing);
+  }
+  return repo.save(repo.create({ ...match, ...data } as T));
+}
 
 const passions = [
   { key: 'mecanique', label: 'Mécanique', icon: '🔧' },
   { key: 'dessin', label: 'Dessin', icon: '🎨' },
   { key: 'musique', label: 'Musique', icon: '🎸' },
   { key: 'skate', label: 'Skate', icon: '🛹' },
+  { key: 'histoire-sciences', label: 'Histoire des sciences', icon: '🔭' },
 ];
 
 const skills = [
   { key: 'thales', label: 'Théorème de Thalès', subject: 'Mathématiques' },
   { key: 'ondes', label: 'Fréquence et ondes', subject: 'Physique' },
+  { key: 'sciences-maths', label: 'Mathématiques — du problème historique à la notion', subject: 'Mathématiques' },
+  { key: 'sciences-physique', label: 'Physique — du problème historique à la notion', subject: 'Physique' },
+  { key: 'sciences-chimie', label: 'Chimie — du problème historique à la notion', subject: 'Chimie' },
+  { key: 'sciences-svt', label: 'SVT — du problème historique à la notion', subject: 'SVT' },
 ];
 
 const badges = [
@@ -41,6 +68,20 @@ const badges = [
   },
 ];
 
+const SUBJECT_SKILL_KEY: Record<MissionSubject, string> = {
+  Mathématiques: 'sciences-maths',
+  Physique: 'sciences-physique',
+  Chimie: 'sciences-chimie',
+  SVT: 'sciences-svt',
+};
+
+const XP_BY_LEVEL: Record<string, number> = {
+  [SchoolLevel.SIXIEME]: 80,
+  [SchoolLevel.CINQUIEME]: 100,
+  [SchoolLevel.QUATRIEME]: 120,
+  [SchoolLevel.TROISIEME]: 150,
+};
+
 async function seed() {
   await AppDataSource.initialize();
 
@@ -50,29 +91,35 @@ async function seed() {
   const challengeRepo = AppDataSource.getRepository(ChallengeOrmEntity);
   const userRepo = AppDataSource.getRepository(UserOrmEntity);
 
-  const savedPassions = await Promise.all(
-    passions.map((p) => passionRepo.save(passionRepo.create(p))),
-  );
-  const savedSkills = await Promise.all(
-    skills.map((s) => skillRepo.save(skillRepo.create(s))),
-  );
-  await Promise.all(badges.map((b) => badgeRepo.save(badgeRepo.create(b))));
+  for (const passion of passions) {
+    await upsert(passionRepo, { key: passion.key }, passion);
+  }
+  for (const skill of skills) {
+    await upsert(skillRepo, { key: skill.key }, skill);
+  }
+  for (const badge of badges) {
+    await upsert(badgeRepo, { key: badge.key }, badge);
+  }
 
-  const skate = savedPassions.find((p) => p.key === 'skate')!;
-  const musique = savedPassions.find((p) => p.key === 'musique')!;
-  const thales = savedSkills.find((s) => s.key === 'thales')!;
-  const ondes = savedSkills.find((s) => s.key === 'ondes')!;
+  const skateP = await passionRepo.findOneByOrFail({ key: 'skate' });
+  const musiqueP = await passionRepo.findOneByOrFail({ key: 'musique' });
+  const historyP = await passionRepo.findOneByOrFail({
+    key: 'histoire-sciences',
+  });
+  const thalesSkill = await skillRepo.findOneByOrFail({ key: 'thales' });
+  const ondesSkill = await skillRepo.findOneByOrFail({ key: 'ondes' });
 
-  await challengeRepo.save(
-    challengeRepo.create({
-      title: "L'Héritage de Khéops",
+  await upsert(
+    challengeRepo,
+    { title: "L'Héritage de Khéops" },
+    {
       description:
         "Mesure la hauteur d'un obstacle de ton skatepark en appliquant le théorème de Thalès, comme les bâtisseurs égyptiens.",
       schoolLevel: SchoolLevel.TROISIEME,
       durationMinutes: 45,
       xpReward: 150,
-      passion: skate,
-      skill: thales,
+      passion: skateP,
+      skill: thalesSkill,
       narrativeIntro:
         "Il y a 4500 ans, les bâtisseurs de la pyramide de Khéops n'avaient ni laser ni drone. Pour connaître la hauteur d'un monument, ils comparaient l'ombre portée d'un bâton planté verticalement à celle de l'édifice. Aujourd'hui, c'est à toi de reproduire cette technique sur un obstacle de ton skatepark.",
       theoryExplanation:
@@ -81,42 +128,25 @@ async function seed() {
         formula: THALES_SHADOW_RATIO_FORMULA,
         resultLabel: "Hauteur estimée de l'obstacle",
         fields: [
-          {
-            key: 'stickHeightM',
-            label: 'Hauteur du bâton',
-            unit: 'm',
-            min: 0.1,
-            max: 3,
-          },
-          {
-            key: 'stickShadowM',
-            label: "Longueur de l'ombre du bâton",
-            unit: 'm',
-            min: 0.05,
-            max: 10,
-          },
-          {
-            key: 'targetShadowM',
-            label: "Longueur de l'ombre de l'obstacle",
-            unit: 'm',
-            min: 0.05,
-            max: 30,
-          },
+          { key: 'stickHeightM', label: 'Hauteur du bâton', unit: 'm', min: 0.1, max: 3 },
+          { key: 'stickShadowM', label: "Longueur de l'ombre du bâton", unit: 'm', min: 0.05, max: 10 },
+          { key: 'targetShadowM', label: "Longueur de l'ombre de l'obstacle", unit: 'm', min: 0.05, max: 30 },
         ],
       },
-    }),
+    },
   );
 
-  await challengeRepo.save(
-    challengeRepo.create({
-      title: 'Fréquence & Ondes',
+  await upsert(
+    challengeRepo,
+    { title: 'Fréquence & Ondes' },
+    {
       description:
         'Analyse la fréquence des cordes de ta guitare pour comprendre la propagation des ondes sonores.',
       schoolLevel: SchoolLevel.SECONDE,
       durationMinutes: 30,
       xpReward: 100,
-      passion: musique,
-      skill: ondes,
+      passion: musiqueP,
+      skill: ondesSkill,
       narrativeIntro:
         "Chaque corde de guitare vibre à une fréquence précise qui détermine la note que tu entends. Avant les accordeurs électroniques, les musiciens réglaient leurs instruments à l'oreille en comparant des fréquences entre elles.",
       theoryExplanation:
@@ -125,31 +155,42 @@ async function seed() {
         formula: 'wave-frequency-comparison',
         resultLabel: 'Écart de fréquence (Hz)',
         fields: [
-          {
-            key: 'referenceFrequencyHz',
-            label: 'Fréquence de référence',
-            unit: 'Hz',
-            min: 20,
-            max: 2000,
-          },
-          {
-            key: 'measuredFrequencyHz',
-            label: 'Fréquence mesurée',
-            unit: 'Hz',
-            min: 20,
-            max: 2000,
-          },
+          { key: 'referenceFrequencyHz', label: 'Fréquence de référence', unit: 'Hz', min: 20, max: 2000 },
+          { key: 'measuredFrequencyHz', label: 'Fréquence mesurée', unit: 'Hz', min: 20, max: 2000 },
         ],
       },
-    }),
+    },
   );
+
+  const subjectSkills = new Map<MissionSubject, SkillOrmEntity>();
+  for (const [subject, key] of Object.entries(SUBJECT_SKILL_KEY) as [
+    MissionSubject,
+    string,
+  ][]) {
+    subjectSkills.set(subject, await skillRepo.findOneByOrFail({ key }));
+  }
+
+  for (const mission of HISTORY_OF_SCIENCE_MISSIONS) {
+    await upsert(
+      challengeRepo,
+      { title: mission.title },
+      {
+        description: mission.theoryExplanation,
+        schoolLevel: mission.level,
+        durationMinutes: mission.durationMinutes,
+        xpReward: XP_BY_LEVEL[mission.level] ?? 100,
+        passion: historyP,
+        skill: subjectSkills.get(mission.subject)!,
+        narrativeIntro: mission.narrativeIntro,
+        theoryExplanation: mission.theoryExplanation,
+        calculatorSchema: mission.calculatorSchema,
+      },
+    );
+  }
 
   const demoExists = await userRepo.findOne({ where: { id: DEMO_USER_ID } });
   if (!demoExists) {
-    const demoPasswordHash = await bcrypt.hash(
-      'demo-no-login-account',
-      10,
-    );
+    const demoPasswordHash = await bcrypt.hash('demo-no-login-account', 10);
     await userRepo.save(
       userRepo.create({
         id: DEMO_USER_ID,
@@ -157,14 +198,16 @@ async function seed() {
         passwordHash: demoPasswordHash,
         firstName: 'Invité',
         schoolLevel: SchoolLevel.TROISIEME,
-        passions: [skate],
+        passions: [skateP],
         xpPoints: 0,
       }),
     );
   }
 
   await AppDataSource.destroy();
-  console.log('Seed terminé.');
+  console.log(
+    `Seed terminé : ${HISTORY_OF_SCIENCE_MISSIONS.length + 2} missions.`,
+  );
 }
 
 seed().catch((error) => {
