@@ -19,6 +19,10 @@ import {
 } from './axial-symmetry-error';
 import { DISK_AREA_FORMULA, computeDiskArea } from './disk-area';
 import { NET_BALANCE_FORMULA, computeNetBalance } from './net-balance';
+import {
+  LOWEST_COMMON_MULTIPLE_FORMULA,
+  computeLowestCommonMultiple,
+} from './lowest-common-multiple';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -31,6 +35,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [AXIAL_SYMMETRY_ERROR_FORMULA]: computeAxialSymmetryError,
   [DISK_AREA_FORMULA]: computeDiskArea,
   [NET_BALANCE_FORMULA]: computeNetBalance,
+  [LOWEST_COMMON_MULTIPLE_FORMULA]: computeLowestCommonMultiple,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
