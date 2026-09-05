@@ -50,6 +50,9 @@ export class GetChallengeDetailUseCase {
       narrativeIntro: challenge.narrativeIntro,
       theoryExplanation: challenge.theoryExplanation,
       calculatorSchema: challenge.calculatorSchema,
+      notionKey: challenge.notionKey,
+      guidedExperiment: challenge.guidedExperiment,
+      autonomousChallenge: challenge.autonomousChallenge,
     };
   }
 }

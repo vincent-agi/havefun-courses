@@ -68,4 +68,50 @@ describe('HISTORY_OF_SCIENCE_MISSIONS', () => {
     expect(bySubject.get('Chimie')).toBe(14);
     expect(bySubject.get('SVT')).toBe(21);
   });
+
+  describe('missions pilotes (parcours expérimental)', () => {
+    const pilots = HISTORY_OF_SCIENCE_MISSIONS.filter((m) => m.notionKey);
+
+    it('en compte une par matière', () => {
+      const subjects = pilots.map((p) => p.subject).sort();
+      expect(subjects).toEqual(['Chimie', 'Mathématiques', 'Physique', 'SVT']);
+    });
+
+    it('a des clés de notion uniques et en kebab-case', () => {
+      const keys = pilots.map((p) => p.notionKey as string);
+      expect(new Set(keys).size).toBe(keys.length);
+      for (const key of keys) expect(key).toMatch(/^[a-z][a-z0-9-]+$/);
+    });
+
+    it('fournit un protocole guidé complet et un défi autonome', () => {
+      for (const pilot of pilots) {
+        const guided = pilot.guidedExperiment!;
+        expect(guided.materials.length).toBeGreaterThanOrEqual(2);
+        expect(guided.steps.length).toBeGreaterThanOrEqual(3);
+        expect(guided.steps.every((s) => s.instruction.trim().length > 0)).toBe(
+          true,
+        );
+        expect(guided.steps.some((s) => (s.question ?? '').includes('?'))).toBe(
+          true,
+        );
+        expect(guided.schema.trim().length).toBeGreaterThan(0);
+        expect(guided.measures.length).toBeGreaterThanOrEqual(1);
+        expect(guided.interpretation.trim().length).toBeGreaterThan(40);
+
+        const autonomous = pilot.autonomousChallenge!;
+        expect(autonomous.brief.trim().length).toBeGreaterThan(60);
+        expect(autonomous.schema.trim().length).toBeGreaterThan(0);
+        expect(autonomous.successCriteria.trim().length).toBeGreaterThan(20);
+      }
+    });
+
+    it('laisse les autres missions sur l’ancien parcours (sans notionKey)', () => {
+      const nonPilots = HISTORY_OF_SCIENCE_MISSIONS.filter((m) => !m.notionKey);
+      expect(nonPilots).toHaveLength(65);
+      for (const mission of nonPilots) {
+        expect(mission.guidedExperiment).toBeNull();
+        expect(mission.autonomousChallenge).toBeNull();
+      }
+    });
+  });
 });

@@ -1,5 +1,10 @@
 import * as bcrypt from 'bcryptjs';
-import type { Repository, ObjectLiteral } from 'typeorm';
+import type {
+  DeepPartial,
+  FindOptionsWhere,
+  ObjectLiteral,
+  Repository,
+} from 'typeorm';
 import { AppDataSource } from '../data-source.js';
 import {
   PassionOrmEntity,
@@ -25,15 +30,17 @@ import {
  */
 async function upsert<T extends ObjectLiteral>(
   repo: Repository<T>,
-  match: Partial<T>,
-  data: Partial<T>,
+  match: FindOptionsWhere<T>,
+  data: DeepPartial<T>,
 ): Promise<T> {
-  const existing = await repo.findOne({ where: match as never });
+  const existing = await repo.findOne({ where: match });
   if (existing) {
     repo.merge(existing, data);
     return repo.save(existing);
   }
-  return repo.save(repo.create({ ...match, ...data } as T));
+  return repo.save(
+    repo.create({ ...match, ...data } as DeepPartial<T>),
+  );
 }
 
 const passions = [
@@ -184,6 +191,9 @@ async function seed() {
         narrativeIntro: mission.narrativeIntro,
         theoryExplanation: mission.theoryExplanation,
         calculatorSchema: mission.calculatorSchema,
+        notionKey: mission.notionKey,
+        guidedExperiment: mission.guidedExperiment,
+        autonomousChallenge: mission.autonomousChallenge,
       },
     );
   }

@@ -3,12 +3,23 @@ import type {
   CalculatorField,
   CalculatorSchema,
 } from '../../../domain/entities/calculator-schema.js';
+import type {
+  GuidedExperiment,
+  AutonomousChallenge,
+} from '../../../domain/entities/challenge.js';
 
 export type MissionSubject =
   | 'Mathématiques'
   | 'Physique'
   | 'Chimie'
   | 'SVT';
+
+/** Parcours expérimental d'une mission pilote (nouveau format guidé + défi). */
+export interface MissionExperiment {
+  notionKey: string;
+  guidedExperiment: GuidedExperiment;
+  autonomousChallenge: AutonomousChallenge;
+}
 
 export interface HistoryOfScienceMission {
   /** Code de l'issue d'origine, ex. "1.1". */
@@ -20,6 +31,9 @@ export interface HistoryOfScienceMission {
   narrativeIntro: string;
   theoryExplanation: string;
   calculatorSchema: CalculatorSchema;
+  notionKey: string | null;
+  guidedExperiment: GuidedExperiment | null;
+  autonomousChallenge: AutonomousChallenge | null;
 }
 
 /**
@@ -202,6 +216,7 @@ function m(
   formula: string,
   resultLabel: string,
   fieldKeys: string[],
+  experiment?: MissionExperiment,
 ): HistoryOfScienceMission {
   return {
     code,
@@ -216,6 +231,9 @@ function m(
       resultLabel,
       fields: fieldKeys.map(fieldOf),
     },
+    notionKey: experiment?.notionKey ?? null,
+    guidedExperiment: experiment?.guidedExperiment ?? null,
+    autonomousChallenge: experiment?.autonomousChallenge ?? null,
   };
 }
 
@@ -223,6 +241,271 @@ const S6 = SchoolLevel.SIXIEME;
 const S5 = SchoolLevel.CINQUIEME;
 const S4 = SchoolLevel.QUATRIEME;
 const S3 = SchoolLevel.TROISIEME;
+
+// ---------------------------------------------------------------------------
+// Parcours expérimentaux des missions PILOTES (une par matière).
+// Chaque notionKey est associé, côté application mobile, à un validateur
+// d'expérience spécifique (forme et fond).
+// ---------------------------------------------------------------------------
+
+const PILOT_PI_CIRCLE: MissionExperiment = {
+  notionKey: 'pi-circle-ratio',
+  guidedExperiment: {
+    title: 'Expérience guidée — faire rouler pour retrouver π',
+    goal: "Montrer que, pour n'importe quel disque, le périmètre divisé par le diamètre donne toujours le même nombre.",
+    materials: [
+      '3 objets ronds de tailles très différentes (couvercle, assiette, roue…)',
+      'Une ficelle non élastique et un mètre ruban',
+      'Une craie, un sol plat',
+    ],
+    schema: [
+      "  depart                 1 tour complet",
+      "    |__________________________|",
+      "  o============================>   <- on deroule le bord sur la craie",
+      "  (bord de l'objet)      P = distance parcourue",
+      "",
+      "   .-''-.",
+      "  ( D--- )   D = plus grande largeur, en passant par le centre",
+      "   `-..-'",
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Marque un point sur le bord de l'objet. Pose ce point sur une ligne à la craie, puis fais rouler l'objet d'un tour complet jusqu'à ce que le point revienne au sol.",
+        question:
+          'La distance parcourue est-elle plus grande ou plus petite que le tour que tu imaginais ?',
+      },
+      {
+        instruction:
+          'Mesure cette distance : c\'est le périmètre P de l\'objet.',
+        question: "As-tu bien mesuré sur UN seul tour, ni plus ni moins ?",
+      },
+      {
+        instruction:
+          "Mesure le diamètre D de l'objet : sa plus grande largeur, en passant par le centre.",
+        question: 'Ta règle passe-t-elle bien par le milieu du disque ?',
+      },
+      {
+        instruction:
+          "Recommence pour les 2 autres objets, puis calcule P ÷ D pour chacun.",
+        question:
+          "Les trois résultats sont-ils proches les uns des autres ? De combien s'écartent-ils de 3 ?",
+      },
+    ],
+    measures: [
+      'Objet 1 : P et D (en cm)',
+      'Objet 2 : P et D (en cm)',
+      'Objet 3 : P et D (en cm)',
+    ],
+    interpretation:
+      "Quelle que soit la taille, P ÷ D tombe toujours autour de 3,14. Ce nombre constant est π : le périmètre est proportionnel au diamètre, comme Archimède l'a démontré.",
+  },
+  autonomousChallenge: {
+    title: 'Défi en autonomie — la mare infranchissable',
+    brief:
+      "Dans la cour, un cercle de 4 m de rayon est tracé au sol : impossible d'entrer dedans. Sans marcher à l'intérieur, prévois la longueur de grillage nécessaire pour l'entourer, puis vérifie en déroulant une ficelle sur le tracé.",
+    schema: [
+      '        _____',
+      '      /       \\',
+      '     |    x----|  R = 4 m (mesure du centre au bord)',
+      '      \\ _____ /',
+      '   grillage = tout le tour du cercle',
+    ].join('\n'),
+    successCriteria:
+      "Ta prévision et la mesure à la ficelle diffèrent de moins de 5 %.",
+  },
+};
+
+const PILOT_DENSITY: MissionExperiment = {
+  notionKey: 'density-floats',
+  guidedExperiment: {
+    title: 'Expérience guidée — prévoir avant de lâcher dans l\'eau',
+    goal:
+      "Prévoir si un objet flotte ou coule à partir de sa masse volumique, puis vérifier.",
+    materials: [
+      'Une balance, un verre gradué transparent',
+      '4 petits objets : cube de bois, cube de plastique, galet, boule de pâte à modeler',
+      'De l\'eau, un fil fin',
+    ],
+    schema: [
+      '   balance          verre gradue',
+      '   [====]           |~~~~~~|  <- niveau apres immersion',
+      '    || m             |      |  <- niveau avant',
+      '                     |__o___|   volume deplace = niveau apres - avant',
+      '',
+      '   masse volumique  rho = m / V',
+      '   rho < 1 (eau) -> flotte      rho > 1 -> coule',
+    ].join('\n'),
+    steps: [
+      {
+        instruction: "Pèse un objet : note sa masse m (en g).",
+        question: 'La balance est-elle bien à zéro avant de poser l\'objet ?',
+      },
+      {
+        instruction:
+          "Plonge l'objet entièrement dans le verre gradué au bout du fil. Relève la montée d'eau : c'est le volume déplacé V (en cm³, 1 mL = 1 cm³).",
+        question: "L'objet est-il totalement sous l'eau, sans toucher le fond ?",
+      },
+      {
+        instruction:
+          'Calcule la masse volumique ρ = m ÷ V. Compare-la à celle de l\'eau (1 g/cm³) et prévois : flotte ou coule ?',
+        question: 'Si ρ est plus petit que 1, que va faire l\'objet ?',
+      },
+      {
+        instruction:
+          'Lâche maintenant l\'objet dans l\'eau et observe. Recommence pour les 4 objets.',
+        question:
+          'Ta prévision est-elle juste à chaque fois ? Sinon, d\'où vient l\'erreur de mesure ?',
+      },
+    ],
+    measures: [
+      'Pour chaque objet : masse m, volume déplacé V',
+      'Masse volumique calculée ρ = m / V',
+      'Prévision (flotte / coule) puis observation réelle',
+    ],
+    interpretation:
+      "Les objets de masse volumique inférieure à 1 g/cm³ flottent, les autres coulent. À masse égale, celui qui déplace le plus d'eau est le moins dense — le raisonnement d'Archimède sur la couronne.",
+  },
+  autonomousChallenge: {
+    title: 'Défi en autonomie — trier alu et plastique',
+    brief:
+      "Un ferrailleur a un mélange de granulés d'aluminium (ρ = 2,7 g/cm³) et de polystyrène (ρ = 1,05 g/cm³). Il dispose de 4 liquides : eau pure (1,0), eau salée saturée (1,2), alcool (0,79), huile (0,92). Choisis le liquide qui sépare les deux matériaux par flottaison, et dis lequel flotte, lequel coule.",
+    schema: [
+      '   liquide de tri : rho_liquide',
+      '   ---------------------------------',
+      '    o  granule qui FLOTTE  (rho_granule < rho_liquide)',
+      '   ===============================  surface',
+      '    .  granule qui COULE   (rho_granule > rho_liquide)',
+      '   ---------------------------------',
+      '   il faut rho_liquide ENTRE 1,05 et 2,7',
+    ].join('\n'),
+    successCriteria:
+      "Tu choisis le seul liquide dont la masse volumique est comprise entre 1,05 et 2,7, et tu indiques correctement qui flotte (polystyrène) et qui coule (aluminium).",
+  },
+};
+
+const PILOT_MASS_CONSERVATION: MissionExperiment = {
+  notionKey: 'mass-conservation',
+  guidedExperiment: {
+    title: 'Expérience guidée — peser avant, peser après',
+    goal:
+      "Vérifier que la masse totale ne change pas quand une transformation se produit en récipient fermé.",
+    materials: [
+      'Une balance électronique (0,1 g)',
+      'Une bouteille en plastique avec un ballon de baudruche sur le goulot',
+      'Un comprimé effervescent et un peu d\'eau',
+      'Un verre, du vinaigre et du bicarbonate (pour la version ouverte)',
+    ],
+    schema: [
+      '   SYSTEME FERME               SYSTEME OUVERT',
+      '     (O) ballon                    (   verre   )',
+      '     |__|                          |  vinaigre |',
+      '   |bouteille|  sur balance        |+bicarbonate|  sur balance',
+      '   |  eau    |                     |___________|',
+      '   [===m1===]                      [====m1====]',
+      '   apres reaction : m2             apres : m2',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Système fermé : mets le comprimé dans le ballon (sans qu'il tombe) et un peu d'eau dans la bouteille. Ferme, puis pèse l'ensemble : c'est m1.",
+        question: 'Le montage est-il bien étanche, rien ne peut sortir ?',
+      },
+      {
+        instruction:
+          'Fais tomber le comprimé dans l\'eau. Le ballon se gonfle. Attends la fin, puis repèse l\'ensemble : c\'est m2. Compare m1 et m2.',
+        question: 'La masse a-t-elle changé alors qu\'il s\'est clairement passé quelque chose ?',
+      },
+      {
+        instruction:
+          'Système ouvert : pose un verre avec du vinaigre sur la balance, note m1, verse le bicarbonate, laisse mousser, note m2.',
+        question:
+          'Ici la masse diminue. Où est passée la masse manquante : disparue, ou partie ailleurs ?',
+      },
+    ],
+    measures: [
+      'Système fermé : masse m1 (avant) et m2 (après)',
+      'Système ouvert : masse m1 (avant) et m2 (après)',
+    ],
+    interpretation:
+      "En récipient fermé, m2 = m1 : la matière est conservée, même invisible. En récipient ouvert, la masse diminue parce qu'un gaz s'échappe — mais ce gaz existe. C'est le principe de Lavoisier : rien ne se perd.",
+  },
+  autonomousChallenge: {
+    title: 'Défi en autonomie — la laine de fer qui grossit',
+    brief:
+      "On te dit qu'en brûlant, une portion de laine d'acier GAGNE de la masse, alors qu'une bougie qui brûle PERD de la masse. Explique ces deux résultats avec le principe de conservation de la masse. Pour chaque cas, indique ce qui entre ou sort du système.",
+    schema: [
+      '   laine d\'acier + O2 de l\'air  ->  oxyde de fer   (masse AUGMENTE)',
+      '        (le metal fixe un gaz)',
+      '',
+      '   bougie (cire) + O2 de l\'air  ->  CO2 + eau (gaz)  qui s\'echappent',
+      '        (systeme ouvert)                            (masse DIMINUE)',
+    ].join('\n'),
+    successCriteria:
+      "Tu expliques les deux cas par un échange de gaz avec l'air (fixation d'O₂ d'un côté, départ de CO₂ et d'eau de l'autre), sans jamais dire que la matière disparaît ou apparaît.",
+  },
+};
+
+const PILOT_OUTBREAK: MissionExperiment = {
+  notionKey: 'outbreak-source',
+  guidedExperiment: {
+    title: 'Expérience guidée — la carte des malades',
+    goal:
+      "Retrouver la source d'une contagion en comparant les taux d'attaque, comme John Snow à Londres en 1854.",
+    materials: [
+      'Un plan de la cour ou du quartier',
+      '20 fiches « habitant » : chacune indique le point d\'eau utilisé et si la personne est malade',
+      'Des gommettes de deux couleurs',
+      'De la poudre traçante (ou paillettes) et du savon pour la partie transmission',
+    ],
+    schema: [
+      '   PLAN               fontaine A      fontaine B      robinet C',
+      '   -----------        [ x x x . ]     [ . ]           [ . . ]',
+      '   x = malade          malades: 3/8    malades: 0/3    malades: 0/4',
+      '   . = sain            taux = 0,38     taux = 0        taux = 0',
+      '',
+      '   taux d\'attaque d\'une source = malades / total qui l\'utilisent',
+    ].join('\n'),
+    steps: [
+      {
+        instruction:
+          "Trie les 20 fiches par point d'eau utilisé. Pour chaque point d'eau, compte le nombre de malades et le nombre total d'utilisateurs.",
+        question: 'Un même point d\'eau revient-il souvent chez les malades ?',
+      },
+      {
+        instruction:
+          "Calcule le taux d'attaque de chaque point d'eau = malades ÷ utilisateurs. Reporte les cas sur le plan avec des gommettes.",
+        question: 'Quel point d\'eau a le taux d\'attaque le plus élevé ?',
+      },
+      {
+        instruction:
+          "Transmission : un élève a les mains couvertes de poudre. Il salue 5 camarades qui en saluent d'autres. Révèle la poudre. Recommence après lavage au savon 30 s, puis après simple rinçage à l'eau.",
+        question: 'Le savon coupe-t-il la chaîne mieux que l\'eau seule ?',
+      },
+    ],
+    measures: [
+      'Pour chaque point d\'eau : nombre de malades et nombre d\'utilisateurs',
+      'Taux d\'attaque de chaque point d\'eau',
+      'Nombre de personnes contaminées : après savon / après simple rinçage',
+    ],
+    interpretation:
+      "Le point d'eau au taux d'attaque le plus fort est la source : le « condamner » arrête l'épidémie. Le lavage au savon coupe la transmission bien mieux que l'eau seule. Ce sont les démarches de Snow et de Semmelweis.",
+  },
+  autonomousChallenge: {
+    title: 'Défi en autonomie — enquête d\'hygiène au collège',
+    brief:
+      "Mène une vraie petite enquête : « se lave-t-on davantage les mains quand du savon et une affiche sont présents ? » Choisis ce que tu observes et comptes, dans deux endroits (un avec savon + affiche, un sans). Donne un résultat chiffré et une recommandation en une phrase.",
+    schema: [
+      '   Endroit A (savon + affiche)   Endroit B (rien)',
+      '   observes : nA                 observes : nB',
+      '   se lavent : lA                se lavent : lB',
+      '   taux A = lA / nA              taux B = lB / nB',
+      '   comparer  taux A  vs  taux B',
+    ].join('\n'),
+    successCriteria:
+      "Tu compares deux taux (avec / sans dispositif) calculés sur des effectifs comparables, et tu proposes une recommandation cohérente avec tes chiffres.",
+  },
+};
 
 export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
   // ------------------------- M1 · Mathématiques -------------------------
@@ -232,6 +515,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "À Syracuse, Archimède cherche un encadrement fiable de la longueur d'un cercle, dont les artisans ne connaissent que des valeurs grossières. Dans « La Mesure du cercle », il coince le cercle entre deux polygones jusqu'à 96 côtés et démontre 223/71 < π < 22/7.",
     "Le périmètre d'un disque est proportionnel à son diamètre : P = π × D. En roulant un objet circulaire sur un tour et en mesurant son diamètre, le quotient P / D retombe toujours autour de 3,14.",
     'pi-from-circle', 'Valeur de π estimée', ['perimeterM', 'diameterM'],
+    PILOT_PI_CIRCLE,
   ),
   m(
     '1.2', 'Mathématiques', S6,
@@ -381,6 +665,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Chargé de vérifier sans l'abîmer si la couronne du roi Hiéron II est en or pur, Archimède compare le volume d'eau qu'elle déplace à celui d'une même masse d'or.",
     "La masse volumique = masse / volume déplacé. Comparée à celle de l'eau (1 g/cm³), elle dit si un corps flotte (< 1) ou coule (> 1).",
     'density', 'Masse volumique (g/cm³)', ['massG', 'displacedVolumeCm3'],
+    PILOT_DENSITY,
   ),
   m(
     '2.5', 'Physique', S6,
@@ -495,6 +780,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Quand on dissout du sucre dans l'eau, il disparaît à la vue. Lavoisier énonce en 1789 que « rien ne se perd » : la balance ne bouge pas.",
     "Lors d'une dissolution, la masse de la solution = masse du soluté + masse du solvant : le soluté invisible n'est pas perdu.",
     'solution-mass', 'Masse de la solution (g)', ['soluteMassG', 'solventMassG'],
+    PILOT_MASS_CONSERVATION,
   ),
   m(
     '3.5', 'Chimie', S5,
@@ -651,6 +937,7 @@ export const HISTORY_OF_SCIENCE_MISSIONS: HistoryOfScienceMission[] = [
     "Semmelweis impose le lavage des mains chlorées et fait chuter la fièvre puerpérale. Snow cartographie une flambée de choléra à Soho et la relie à la pompe de Broad Street.",
     "Enquête de terrain : taux d'attaque d'une source suspecte = nombre de malades exposés / nombre total d'exposés à cette source.",
     'attack-rate', "Taux d'attaque", ['cases', 'exposed'],
+    PILOT_OUTBREAK,
   ),
   m(
     '4.13', 'SVT', S4,
