@@ -124,6 +124,31 @@ import {
   OXYGEN_FRACTION_FORMULA,
   computeOxygenFraction,
 } from './oxygen-fraction';
+import {
+  VOLUME_CONTRACTION_FORMULA,
+  computeVolumeContraction,
+} from './volume-contraction';
+import {
+  COMBUSTION_DURATION_FORMULA,
+  computeCombustionDuration,
+} from './combustion-duration';
+import {
+  CONSERVED_PRODUCT_MASS_FORMULA,
+  computeConservedProductMass,
+} from './conserved-product-mass';
+import {
+  ELECTROLYSIS_GAS_RATIO_FORMULA,
+  computeElectrolysisGasRatio,
+} from './electrolysis-gas-ratio';
+import {
+  OXIDATION_MASS_GAIN_FORMULA,
+  computeOxidationMassGain,
+} from './oxidation-mass-gain';
+import { DILUTED_ACID_PH_FORMULA, computeDilutedAcidPh } from './diluted-acid-ph';
+import {
+  CONDUCTIVITY_RATIO_FORMULA,
+  computeConductivityRatio,
+} from './conductivity-ratio';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -169,6 +194,13 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [RETENTION_FACTOR_FORMULA]: computeRetentionFactor,
   [MASS_BALANCE_FORMULA]: computeMassBalance,
   [OXYGEN_FRACTION_FORMULA]: computeOxygenFraction,
+  [VOLUME_CONTRACTION_FORMULA]: computeVolumeContraction,
+  [COMBUSTION_DURATION_FORMULA]: computeCombustionDuration,
+  [CONSERVED_PRODUCT_MASS_FORMULA]: computeConservedProductMass,
+  [ELECTROLYSIS_GAS_RATIO_FORMULA]: computeElectrolysisGasRatio,
+  [OXIDATION_MASS_GAIN_FORMULA]: computeOxidationMassGain,
+  [DILUTED_ACID_PH_FORMULA]: computeDilutedAcidPh,
+  [CONDUCTIVITY_RATIO_FORMULA]: computeConductivityRatio,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
