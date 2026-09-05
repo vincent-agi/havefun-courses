@@ -102,6 +102,28 @@ import {
   computeResultantForce,
 } from './resultant-force';
 import { KINETIC_ENERGY_FORMULA, computeKineticEnergy } from './kinetic-energy';
+import {
+  MIXTURE_TEMPERATURE_FORMULA,
+  computeMixtureTemperature,
+} from './mixture-temperature';
+import {
+  DISSOLVED_SOLIDS_FORMULA,
+  computeDissolvedSolids,
+} from './dissolved-solids';
+import {
+  DISTILLATION_YIELD_FORMULA,
+  computeDistillationYield,
+} from './distillation-yield';
+import { SOLUTION_MASS_FORMULA, computeSolutionMass } from './solution-mass';
+import {
+  RETENTION_FACTOR_FORMULA,
+  computeRetentionFactor,
+} from './retention-factor';
+import { MASS_BALANCE_FORMULA, computeMassBalance } from './mass-balance';
+import {
+  OXYGEN_FRACTION_FORMULA,
+  computeOxygenFraction,
+} from './oxygen-fraction';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -140,6 +162,13 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [LIGHT_TRAVEL_TIME_FORMULA]: computeLightTravelTime,
   [RESULTANT_FORCE_FORMULA]: computeResultantForce,
   [KINETIC_ENERGY_FORMULA]: computeKineticEnergy,
+  [MIXTURE_TEMPERATURE_FORMULA]: computeMixtureTemperature,
+  [DISSOLVED_SOLIDS_FORMULA]: computeDissolvedSolids,
+  [DISTILLATION_YIELD_FORMULA]: computeDistillationYield,
+  [SOLUTION_MASS_FORMULA]: computeSolutionMass,
+  [RETENTION_FACTOR_FORMULA]: computeRetentionFactor,
+  [MASS_BALANCE_FORMULA]: computeMassBalance,
+  [OXYGEN_FRACTION_FORMULA]: computeOxygenFraction,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
