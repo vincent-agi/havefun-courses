@@ -18,6 +18,7 @@ import {
   computeAxialSymmetryError,
 } from './axial-symmetry-error';
 import { DISK_AREA_FORMULA, computeDiskArea } from './disk-area';
+import { NET_BALANCE_FORMULA, computeNetBalance } from './net-balance';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -29,6 +30,7 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [EUCLIDEAN_REMAINDER_FORMULA]: computeEuclideanRemainder,
   [AXIAL_SYMMETRY_ERROR_FORMULA]: computeAxialSymmetryError,
   [DISK_AREA_FORMULA]: computeDiskArea,
+  [NET_BALANCE_FORMULA]: computeNetBalance,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
