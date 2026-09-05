@@ -190,6 +190,28 @@ import {
   PHENOTYPE_RATIO_FORMULA,
   computePhenotypeRatio,
 } from './phenotype-ratio';
+import {
+  CARDIAC_OUTPUT_FORMULA,
+  computeCardiacOutput,
+} from './cardiac-output';
+import {
+  GREENHOUSE_WARMING_FORMULA,
+  computeGreenhouseWarming,
+} from './greenhouse-warming';
+import {
+  PLATE_DISPLACEMENT_FORMULA,
+  computePlateDisplacement,
+} from './plate-displacement';
+import {
+  VACCINE_EFFICACY_FORMULA,
+  computeVaccineEfficacy,
+} from './vaccine-efficacy';
+import { FOOD_ENERGY_FORMULA, computeFoodEnergy } from './food-energy';
+import {
+  INFILTRATION_RATE_FORMULA,
+  computeInfiltrationRate,
+} from './infiltration-rate';
+import { FRUIT_SET_RATE_FORMULA, computeFruitSetRate } from './fruit-set-rate';
 
 type CalculatorFn = (measurements: Record<string, number>) => number | null;
 
@@ -256,6 +278,13 @@ const CALCULATORS: Record<string, CalculatorFn> = {
   [ATTACK_RATE_FORMULA]: computeAttackRate,
   [PHOTOSYNTHESIS_BUBBLE_RATE_FORMULA]: computePhotosynthesisBubbleRate,
   [PHENOTYPE_RATIO_FORMULA]: computePhenotypeRatio,
+  [CARDIAC_OUTPUT_FORMULA]: computeCardiacOutput,
+  [GREENHOUSE_WARMING_FORMULA]: computeGreenhouseWarming,
+  [PLATE_DISPLACEMENT_FORMULA]: computePlateDisplacement,
+  [VACCINE_EFFICACY_FORMULA]: computeVaccineEfficacy,
+  [FOOD_ENERGY_FORMULA]: computeFoodEnergy,
+  [INFILTRATION_RATE_FORMULA]: computeInfiltrationRate,
+  [FRUIT_SET_RATE_FORMULA]: computeFruitSetRate,
 };
 
 export function getCalculator(formula: string): CalculatorFn | null {
