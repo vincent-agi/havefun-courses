@@ -28,15 +28,21 @@ Prise en main de l'application mobile :
 
 - [`docs/guide-utilisateur.md`](docs/guide-utilisateur.md) — utiliser l'application (élèves, enseignants).
 - [`docs/guide-installation-mobile.md`](docs/guide-installation-mobile.md) — builder et lancer l'application sur iOS et Android (développeurs).
+- [`docs/guide-reseau-local-ios.md`](docs/guide-reseau-local-ios.md) — installer l'app sur un iPhone physique et l'utiliser avec la base de données locale d'un MacBook sur le même Wi-Fi.
 
 ## Structure du dépôt
 
 ```
 havefun-courses/
 ├── mobile/     # Application React Native
+├── webapp/     # Démo web locale (react-native-web, sans authentification)
 ├── backend/    # API NestJS
 └── docs/       # Architecture, design system, guides
 ```
+
+La `webapp/` réutilise tel quel le code de `mobile/` via `react-native-web` et
+sert de démo navigateur sans installation d'app ni écran de connexion. Voir
+[`webapp/README.md`](webapp/README.md).
 
 ## Installation locale
 

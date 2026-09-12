@@ -1,8 +1,10 @@
-import { IsNumber, IsObject, IsOptional, IsUrl } from 'class-validator';
+import { IsNumber, IsObject, IsOptional, Matches } from 'class-validator';
 
 export class CreateSubmissionDto {
   @IsOptional()
-  @IsUrl({ require_tld: false })
+  @Matches(/^\/media\/[0-9a-f-]{36}$/, {
+    message: 'mediaUrl must be a path returned by POST /media',
+  })
   mediaUrl?: string;
 
   @IsOptional()
