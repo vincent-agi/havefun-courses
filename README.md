@@ -1,61 +1,81 @@
 # havefun-courses
 
-Application mobile qui aide les collégiens et lycéens à appliquer les notions théoriques (Mathématiques, Physique...) à leurs passions réelles (Mécanique, Dessin, Musique, Skate) à travers des défis de terrain concrets et ludiques.
+> A mobile app that helps middle and high-school students apply maths, physics, chemistry and biology concepts to the passions they already have, through concrete field challenges — aligned with UN SDG 4 (Quality Education).
 
-Le projet s'inscrit dans le cadre de l'**ODD 4 de l'ONU — Éducation de Qualité** : rendre l'apprentissage accessible, concret et motivant, en connectant la théorie scolaire à des pratiques que l'élève choisit lui-même.
+<!-- TODO Vincent : add a 10 s GIF or screenshot of a mission screen (or of the local web demo). -->
 
-## Comment ça marche
+**Status:** <!-- TODO Vincent : confirm status (active | stable | archived). Last commits: Sept 2026. --> — **License:** <!-- TODO Vincent : no license yet. The previous README said "À définir" and backend/package.json says UNLICENSED. Pending your choice (MIT proposed). -->
 
-1. L'élève renseigne sa classe et sélectionne ses passions.
-2. Il choisit un défi ("Quête") dans un catalogue filtré selon ses centres d'intérêt.
-3. Chaque quête introduit une notion théorique via une mise en situation narrative, puis un calculateur de terrain guide l'élève dans l'application pratique.
-4. L'élève soumet une preuve (photo annotée, mesure de capteurs).
-5. La validation débloque de l'expérience, des badges métiers et alimente son Pass Compétences ODD 4, exportable en PDF.
+---
 
-## Stack technique
+## 1. Why this project exists
 
-| Composant | Choix |
-|---|---|
-| Mobile | React Native (TypeScript) |
-| Backend | NestJS (TypeScript), API REST, authentification JWT |
-| Base de données | MariaDB |
-| Stockage médias | S3-compatible (MinIO en local) |
-| Architecture | Clean Architecture (domaine / cas d'usage / infrastructure / présentation), principes SOLID |
+- **Problem:** school theory feels disconnected from real life. Students rarely see where a formula is used in the things they care about (mechanics, drawing, music, skateboarding).
+- **Who it's for:** middle and high-school students, and teachers who want field-based activities. Usage guides are in French: [`docs/guide-utilisateur.md`](docs/guide-utilisateur.md).
+- **Intent:** the student picks a class level and passions, takes a challenge ("Quête") from a catalogue filtered by interests, and learns the concept through a narrative situation followed by a field calculator. Proof of the work (annotated photo, sensor measurement) is submitted and validated, which unlocks experience, trade badges and a SDG 4 "Pass Compétences" exportable as a PDF.
 
-Le détail des choix et leurs justifications sont documentés dans [`docs/architecture.md`](docs/architecture.md). La charte graphique et les composants sont documentés dans [`docs/design-system.md`](docs/design-system.md). Le guide de mise en production est dans [`docs/deployment.md`](docs/deployment.md), l'audit RGPD/accessibilité dans [`docs/rgpd-accessibilite.md`](docs/rgpd-accessibilite.md). La documentation API interactive (Swagger) est servie sur `/docs` par l'API en cours d'exécution.
+The pedagogical content is a programme of **69 missions** (maths, physics, chemistry, SVT) that start from a dated historical problem, then have the student replay the experiment outdoors (guided) and solve a second problem alone. See [`docs/college-attendus/programme-histoire-des-sciences/`](docs/college-attendus/programme-histoire-des-sciences/README.md) (in French).
 
-Prise en main de l'application mobile :
+## 2. Architecture & technical choices
 
-- [`docs/guide-utilisateur.md`](docs/guide-utilisateur.md) — utiliser l'application (élèves, enseignants).
-- [`docs/guide-installation-mobile.md`](docs/guide-installation-mobile.md) — builder et lancer l'application sur iOS et Android (développeurs).
-- [`docs/guide-reseau-local-ios.md`](docs/guide-reseau-local-ios.md) — installer l'app sur un iPhone physique et l'utiliser avec la base de données locale d'un MacBook sur le même Wi-Fi.
+Two decoupled applications in one repository, `mobile/` and `backend/`, talking only through a REST API authenticated with JWT. Each side applies the same four-layer Clean Architecture and owns its domain layer. The `webapp/` reuses the mobile code in a browser for demos.
 
-## Structure du dépôt
-
-```
-havefun-courses/
-├── mobile/     # Application React Native
-├── webapp/     # Démo web locale (react-native-web, sans authentification)
-├── backend/    # API NestJS
-└── docs/       # Architecture, design system, guides
+```mermaid
+flowchart LR
+  subgraph MOBILE["mobile/ (React Native)"]
+    MP[presentation<br/>screens, navigation] --> MA[application<br/>use-cases, calculators]
+    MA --> MD[domain<br/>entities, repository interfaces]
+    MI[infrastructure<br/>http, sensors, storage] -. implements .-> MD
+  end
+  WEB[webapp/<br/>react-native-web + Vite shims] -. reuses .-> MOBILE
+  MI -- REST + JWT --> BC
+  subgraph BACKEND["backend/ (NestJS)"]
+    BC[presentation<br/>controllers, modules] --> BA[application<br/>use-cases, DTOs, badge rules]
+    BA --> BD[domain<br/>entities, repository interfaces]
+    BI[infrastructure<br/>TypeORM, JWT, media storage] -. implements .-> BD
+  end
+  BI --> DB[(MariaDB)]
+  BI --> FS[(Disk storage<br/>MEDIA_STORAGE_DIR)]
 ```
 
-La `webapp/` réutilise tel quel le code de `mobile/` via `react-native-web` et
-sert de démo navigateur sans installation d'app ni écran de connexion. Voir
-[`webapp/README.md`](webapp/README.md).
+| Decision | Why | Alternative considered |
+|---|---|---|
+| Clean Architecture + SOLID on mobile and backend ([`docs/architecture.md`](docs/architecture.md)) | `domain/` is testable without DB, network or React Native; dependencies are injected through interfaces | — <!-- TODO Vincent : alternative not stated in the docs --> |
+| React Native (TypeScript) for mobile | Same language ecosystem as the NestJS backend; mature libraries for camera, sensors, local storage | Flutter: solid, but a second language (Dart) without a decisive MVP benefit |
+| NestJS, REST, JWT | Modules and providers map naturally to Clean Architecture; the MVP API surface is CRUD plus a few business actions; stateless auth fits multi-device mobile | GraphQL (extra tooling for little gain) |
+| MariaDB with TypeORM migrations | Strongly related entities (user, passion, challenge, submission, badge) need referential integrity; hosting cost and operational simplicity | PostgreSQL: equivalent robustness for this scope |
+| Media proofs on the backend's disk (commit `0d515ec`) | Simpler to run locally and to deploy | S3-compatible storage with MinIO: the original plan in `docs/architecture.md`, replaced by commit `0d515ec` |
+| Field calculators as pure functions in `mobile/src/application/calculators/`, each with its own test | A mission's calculation is independent of the UI and unit-testable | <!-- TODO Vincent : alternative considered, not documented --> |
+| Web demo that reuses mobile code through `react-native-web` and thin shims ([`webapp/README.md`](webapp/README.md)) | One codebase for a no-install browser demo; only native modules are swapped for web shims | A separate web front-end (duplicated screens) |
+| `AUTH_DISABLED=1` local demo mode, guarded in `jwt-auth.guard.ts` | Demo without a login screen; must never be enabled in production | — |
 
-## Installation locale
+**Stack:** React Native 0.87 (TypeScript), NestJS, TypeORM, MariaDB, Passport JWT, Swagger (served on `/docs`), pdfkit (Pass Compétences PDF), Vitest (backend), Jest (mobile), oxlint / ESLint.
 
-### Prérequis
+**Repository layout:**
+```
+backend/src/
+  domain/          # entities, repository interfaces
+  application/     # use-cases (auth, challenges, media, passions, users), DTOs, gamification/badge-rules
+  infrastructure/  # auth (JWT), persistence (TypeORM, migrations, seeds), storage
+  presentation/    # controllers, NestJS modules
+mobile/src/
+  domain/          # entities, repository interfaces
+  application/     # use-cases, calculators
+  infrastructure/  # http, sensors, storage
+  presentation/    # screens (incl. mission validators), navigation, components, theme
+webapp/            # browser demo (react-native-web, no authentication)
+docs/              # architecture, design system, deployment, GDPR/accessibility, guides
+```
 
-- Node.js 20+
-- npm 10+
-- MariaDB 10.x (local ou conteneur)
-- Xcode (build iOS) et/ou Android Studio (build Android)
+**Quality:** unit tests on both sides (22 backend tests with Vitest, 197 mobile tests with Jest), an e2e spec in `backend/test/`, and two path-filtered GitHub Actions workflows ([backend](.github/workflows/backend.yml): lint, build, test; [mobile](.github/workflows/mobile.yml): typecheck, lint, test).
 
-### Backend
+More: [`docs/architecture.md`](docs/architecture.md), [`docs/design-system.md`](docs/design-system.md), [`docs/deployment.md`](docs/deployment.md), [`docs/rgpd-accessibilite.md`](docs/rgpd-accessibilite.md). The interactive Swagger API documentation is served on `/docs` by the running API.
 
-Sans instance MariaDB déjà disponible, un conteneur local suffit :
+## 3. Quickstart
+
+**Prerequisites:** Node.js 20+ (CI uses 20), npm 10+, MariaDB 10.x (local or container), Xcode (iOS) and/or Android Studio (Android).
+
+Backend, with a local MariaDB container if you have none (`podman` works in place of `docker`):
 
 ```bash
 docker run -d --name havefun-mariadb \
@@ -65,31 +85,51 @@ docker run -d --name havefun-mariadb \
   -e MARIADB_ROOT_PASSWORD=changeme \
   -p 3306:3306 \
   mariadb:10.11
-```
 
-(`docker` peut être remplacé par `podman` selon l'outil installé.) Les identifiants ci-dessus correspondent aux valeurs par défaut de `.env.example`.
-
-```bash
-cd backend
+git clone https://github.com/vincent-agi/havefun-courses.git
+cd havefun-courses/backend
 npm install
-cp .env.example .env   # renseigner les accès MariaDB et le secret JWT
+cp .env.example .env      # set the MariaDB access and the JWT secret (never commit .env)
 npm run migration:run
-npm run seed            # optionnel : jeu de données de démonstration
+npm run seed              # optional: demo dataset
 npm run start:dev
+npm test                  # Vitest unit tests
 ```
 
-### Mobile
+Mobile:
 
 ```bash
 cd mobile
 npm install
-npm run ios      # ou npm run android
+npm run ios      # or: npm run android
+npm test         # Jest
 ```
 
-## Contribuer
+Browser demo, with the backend started as `AUTH_DISABLED=1 npm run start:dev` (local demo only):
 
-Voir [`CONTRIBUTING.md`](CONTRIBUTING.md) pour le workflow Git, les conventions de commit et le process de revue.
+```bash
+cd webapp
+npm install
+npm run dev      # http://localhost:5173
+```
 
-## Licence
+Guides (in French): [install and run the mobile app](docs/guide-installation-mobile.md), [use an iPhone with a MacBook's local database](docs/guide-reseau-local-ios.md), [user guide](docs/guide-utilisateur.md).
 
-À définir.
+## 4. Lessons learned
+
+<!-- TODO Vincent : these are leads inferred from the code, docs and git history. Rewrite in your own voice or delete. -->
+
+- **What this project validated:** <!-- TODO Vincent : lead — Clean Architecture on both sides let the 69-mission programme grow (calculators, validators, seeds) without touching the layering; the web demo reuses mobile code almost as-is. -->
+- **What was harder than expected:** <!-- TODO Vincent : lead — turning the pedagogical programme (69 issues in 4 subjects) into seeded data and field calculators, with the experimental flow rolled out progressively (commits 09eafae, a6513b1). -->
+- **What I'd do differently today:** <!-- TODO Vincent : lead — the original S3/MinIO plan was dropped for disk storage (0d515ec); the architecture doc still describes S3/MinIO and mentions Prisma and per-domain modules that differ from the code. -->
+- **Next steps / roadmap:** <!-- TODO Vincent : lead — `docs/architecture.md` mentions a future multi-establishment model, not implemented at the MVP. Choose a license. -->
+
+---
+
+## Contributing
+
+Issues and PRs welcome, see [`CONTRIBUTING.md`](CONTRIBUTING.md) (trunk-based workflow, Conventional Commits).
+
+## About
+
+Built by [Vincent AGI](https://vincent-agi.fr) — software engineer & mentor.
