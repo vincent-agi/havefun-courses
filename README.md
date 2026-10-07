@@ -4,7 +4,7 @@
 
 <!-- TODO Vincent : add a 10 s GIF or screenshot of a mission screen (or of the local web demo). -->
 
-**Status:** <!-- TODO Vincent : confirm status (active | stable | archived). Last commits: Sept 2026. --> — **License:** <!-- TODO Vincent : no license yet. The previous README said "À définir" and backend/package.json says UNLICENSED. Pending your choice (MIT proposed). -->
+**Status:** <!-- TODO Vincent : confirm status (active | stable | archived). Last commits: Sept 2026. --> — **License:** MIT
 
 ---
 
